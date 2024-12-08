@@ -1,7 +1,12 @@
 <script setup>
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import { Link } from '@inertiajs/vue3';
-import { route } from 'ziggy-js';
+import { Link, usePage } from '@inertiajs/vue3';
+import { Inertia } from '@inertiajs/inertia';
+
+function goHome() {
+    Inertia.get('/');
+}
+
 </script>
 
 <template>
@@ -22,11 +27,11 @@ import { route } from 'ziggy-js';
             <div
                 class="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg h-[520px]"
             >
-        <Link href="/">
+            <div @click="goHome" class="cursor-pointer">
                 <div class="flex items-center justify-center " style="margin-bottom: -6px;">
                     <img src="../Components/logored.svg" alt="Logo" class="w-18 h-automatic" />
                 </div>
-            </Link>
+            </div>
             <slot />
         </div>
     </div>
