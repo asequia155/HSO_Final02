@@ -7,7 +7,7 @@
 		  </div>
   
 		  <form class="login100-form validate-form" @submit.prevent="submitLogin">
-			<span class="login100-form-title">Member Login</span>
+			<span class="login100-form-title">Welcome to login</span>
   
 			<div
 			  class="wrap-input100 validate-input"
@@ -43,7 +43,16 @@
 
 			<div class="block mt-4">
                 <label class="flex items-center">
-                    <Checkbox class="rounded border-2 border-gray-800 bg-gray-200 text-indigo-700 shadow-sm focus:ring-indigo-600" name="remember" v-model:checked="form.remember" />
+                    <Checkbox 
+					style="
+                border: 0.5px solid #496182;
+                background-color: #EEEE; /* Dark gray background */
+                color: #4c51bf; /* Indigo color for the checked state */
+                border-radius: 4px; /* Rounded corners */
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Small shadow */
+                outline: none; /* Remove default outline */
+            "
+					 name="remember" v-model:checked="form.remember" />
                     <span class="text-sm text-gray-600" style="margin-left: 6px;">
 						Remember me
 					</span>
