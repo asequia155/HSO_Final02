@@ -31,3 +31,14 @@ const proxyChecked = computed({
         v-model="proxyChecked"
     />
 </template>
+
+<style scoped>
+input {
+    background-color: #EEEE; /* Light gray background */
+    color: #4c51bf; /* Indigo color for the checked state */
+    border-radius: 4px; /* Rounded corners */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Small shadow */
+    outline: none; /* Remove default outline */
+    accent-color: red; /* Red checkmark color */
+}
+</style>

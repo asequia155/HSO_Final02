@@ -18,5 +18,4 @@
 
 <script setup>
 import Sidebar from '@/Components/Sidebar.vue';
-import Topbar from '@/Components/Topbar.vue';
 </script>

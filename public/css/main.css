@@ -212,13 +212,13 @@ iframe {
 .login100-form-title {
   font-family: Poppins-Bold;
   font-size: 24px;
-  color: red;
+  color: rgb(82, 82, 82);
   line-height: 1.2;
   text-align: center;
 
   width: 100%;
   display: block;
-  padding-bottom: 54px;
+  padding-bottom: 28px;
 }
 
 
@@ -230,18 +230,22 @@ iframe {
   margin-bottom: 10px;
 }
 
+.input100-email{
+  margin-top: 30px;
+}
 .input100 {
   font-family: Poppins-Medium;
   font-size: 15px;
   line-height: 1.5;
   color: #666666;
-
+  outline: auto;
   display: block;
   width: 100%;
-  background: #e6e6e6;
+  background: #ffffff;
   height: 50px;
   border-radius: 25px;
   padding: 0 30px 0 68px;
+  margin-top: 24px;
 }
 
 

@@ -1,21 +1,32 @@
 <script setup>
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import { Link } from '@inertiajs/vue3';
+import { route } from 'ziggy-js';
 </script>
 
 <template>
     <div
-        class="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0"
+    style="
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        min-height: 100vh;
+        padding: 15px;
+        background: linear-gradient(-135deg, #ffffff, #d44949);
+        width: 100%;
+    "
+>
     >
-        <div>
-            <Link href="/">
-                <ApplicationLogo class="h-20 w-20 fill-current text-gray-500" />
+            <div
+                class="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg h-[520px]"
+            >
+        <Link href="/">
+                <div class="flex items-center justify-center " style="margin-bottom: -6px;">
+                    <img src="../Components/logored.svg" alt="Logo" class="w-18 h-automatic" />
+                </div>
             </Link>
-        </div>
-
-        <div
-            class="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg"
-        >
             <slot />
         </div>
     </div>

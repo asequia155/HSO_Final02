@@ -27,7 +27,7 @@ Route::get('/', function () {
 
 // Login page
 Route::get('/log-in', function () {
-    return Inertia::render('log-in'); // Ensure this points to resources/views/log-in.blade.php
+    return Inertia::render('Auth/Login'); // Ensure this points to resources/views/log-in.blade.php
 })->name('log-in');
 
 
