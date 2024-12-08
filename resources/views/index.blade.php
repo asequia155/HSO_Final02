@@ -62,7 +62,7 @@
                     <li><a href="#employees">Employees</a></li>
                     <li><a href="#contact">Contact</a></li>
                     <li><a href="product.html">Products</a></li>
-                    <li><a href="{{ route('log-in') }}">Sign In</a></li>
+                    <li><a href="{{ route('login') }}">Sign In</a></li>
                 </ul>
             </nav>
         </div>

@@ -17,13 +17,16 @@ class DashboardController extends Controller
 
         // Role-based dashboard logic
         if ($user->hasRole('admin')) {
-            return Inertia::render('AdminDashboard', [
-                'totalPatients' => Patient::count(),
-                'totalProducts' => Product::count(),
-                'totalSales' => Transaction::sum('total'),
-                'todayTotalSales' => Transaction::whereDate('created_at', Carbon::today())->sum('total'),
-                'salesChartData' => Transaction::select('total', 'created_at')->get(),
-            ]);
+
+            
+    
+        return Inertia::render('AdminDashboard', [
+            'totalPatients' => Patient::count(),
+            'totalProducts' => Product::count(),
+            'totalSales' => Transaction::sum('total'),
+            'todayTotalSales' => Transaction::whereDate('created_at', Carbon::today())->sum('total'),
+        ]);
+    
         } elseif ($user->hasRole('clerk')) {
             return Inertia::render('ClerkDashboard', [
                 'totalProducts' => Product::count(),

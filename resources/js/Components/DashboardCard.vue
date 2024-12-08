@@ -1,5 +1,4 @@
 <template>
-    <div class="flex min-h-screen bg-gray-100 dark:bg-gray-900">
       <div class="container max-w-6xl mx-auto">
         <div class="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
 
@@ -81,7 +80,6 @@
           </div>
         </div>
       </div>
-    </div>
   </template>
 
   <script setup>

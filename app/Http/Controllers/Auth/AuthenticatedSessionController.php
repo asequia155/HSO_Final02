@@ -58,7 +58,7 @@ public function destroy(Request $request): RedirectResponse
     $request->session()->regenerateToken();
 
     // Redirect to custom login page
-    return redirect('/log-in');
+    return redirect('/login');
 }
 
 }
