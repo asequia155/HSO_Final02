@@ -1,0 +1,353 @@
+/*------------------------------------------------------------- 
+    HSO: PRODUCTS -- ^^
+--------------------------------------------------------*/
+
+/* 1. IMPORT FILES */
+@import url('https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i');
+
+/*------------------------------------------------------------- 
+    2. BASE CSS 
+-------------------------------------------------------------*/
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    padding: 0;
+}
+
+ul, ol {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+a, a:hover, a:focus {
+    text-decoration: none;
+    transition: ease all 0.5s;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.row {
+    display: flex; 
+    flex-wrap: wrap;
+    justify-content: center; 
+}
+
+.col-lg-3, .col-sm-6, .col-md-3 {
+    flex: 0 0 calc(25% - 20px);
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.box-img {
+    width: 100%;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.box-img img {
+    width: auto;
+    max-width: 100%;
+    max-height: 150px;
+    object-fit: contain;
+}
+
+input, textarea {
+    outline: none;
+    border: none;
+    resize: none;
+}
+
+/*------------------------------------------------------------- 
+    2. HEADER 
+-------------------------------------------------------------*/
+
+.container {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.topbar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 12px 0;
+    background: rgba(255, 0, 0, 1);
+    z-index: 99;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.topbar h3 {
+    text-align: center;
+    color: #ffffff;
+    font-size: 15px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+}
+
+.navbar-brand {
+    position: absolute;
+    top: 50px;
+    left: 20px;
+    z-index: 15;
+}
+
+.navbar-brand img {
+    max-width: 230px;
+    height: auto;
+}
+
+/* BUTTON HOME */
+/* Home Button Icon */
+.home-icon {
+    position: fixed; /* Fixed position to stay on the screen while scrolling */
+    bottom: 20px; /* Distance from the bottom */
+    right: 20px; /* Distance from the right */
+    z-index: 1000; /* Ensure it stays above other elements */
+    width: 50px; /* Slightly smaller width */
+    height: 50px; /* Slightly smaller height */
+    background-color: #ffffffb5; /* Red background for visibility */
+    color: #ffffff; /* White color for icon */
+    padding: 8px;
+    border-radius: 50%; /* Circular shape */
+    box-shadow: 0 4px 6px rgba(255, 0, 0, 0.2); /* Optional shadow for style */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.home-icon img {
+    width: 100%; /* Scale the image to fit the button */
+    height: 100%;
+    border-radius: 50%; /* Ensure the image is circular */
+    object-fit: cover; /* Maintain proportions of the image */
+}
+
+.home-icon:hover {
+    background-color: red; /* Darker red on hover */
+    transform: scale(1.1); /* Slightly enlarge on hover */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+
+
+/* TAMAN DIRI */
+
+/* Main Product Section */
+.main-product {
+    position: relative;
+    background: rgb(223, 208, 208); 
+    background-size: 200% 200%; 
+    min-height: 100vh; /* Adjusted height for responsiveness */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 50px; /* Ensures space for footer */
+}
+
+/* Find Box Section */
+.find-box {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 92px 0px 75px 0px;
+}
+
+.find-box h1 {
+    font-family: 'Poppin';
+    font-weight: 500;
+    color: red;
+    font-size: 48px;
+    text-align: center;
+    padding-bottom: 15px;
+}
+
+.find-box h4 {
+    font-family: 'Times New Roman', sans-serif;
+    font-weight: 300;
+    color: black;
+    font-size: 20px;
+    text-align: center;
+    padding-bottom: 30px;
+}
+
+/* Box Image Section */
+.box-img {
+    background: #ffffff;
+    text-align: center;
+    padding: 20px; /* Adjust padding for consistent spacing */
+    height: 280px; /* Ensure all boxes are the same height */
+    margin-bottom: 30px;
+    display: flex; /* Use Flexbox for alignment */
+    flex-direction: column; /* Stack items vertically */
+    justify-content: space-between; /* Space between the text and the image */
+    align-items: center; /* Center horizontally */
+    position: relative;
+    border-bottom: solid #ff0000 3px;
+    transition: ease all 0.5s;
+    border-radius: 10px;
+}
+
+.box-img h4 {
+    color: #310606;
+    font-size: 20px; /* Adjust font size for consistency */
+    font-weight: 500;
+    margin: 0; /* Remove unnecessary margins */
+    flex-shrink: 0; /* Prevent the text from shrinking */
+    text-align: center; /* Ensure horizontal alignment */
+    line-height: 1.2; /* Adjust for better readability */
+}
+
+.box-img img {
+    max-height: 150px; /* Ensure all images are consistent in size */
+    object-fit: contain; /* Keep image proportions intact */
+    margin: 10px 0; /* Add spacing between image and text */
+}
+
+.box-img:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    background: #e7303085;
+}
+
+
+/*------------------------------------------------------------- 
+    7. FOOTER 
+-------------------------------------------------------------*/
+
+.copyright {
+    background: #ffffff;
+    padding: 10px 0;
+    border-top: 1px solid #ddd;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    text-align: center;
+}
+
+.copyright p {
+    margin-top: 0;
+    font-size: 14px;
+    color: #636363;
+    display: inline-block;
+}
+
+.copyright p img {
+    margin-right: 10px;
+}
+
+.copyright p a {
+    color: #636363;
+    text-decoration: none;
+}
+
+.copyright p a:hover {
+    text-decoration: underline;
+}
+
+/*------------------------------------------------------------- 
+    8. RESPONSIVE DESIGN (MOBILE VIEW)
+-------------------------------------------------------------*/
+
+@media (max-width: 767px) {
+    .container {
+        width: 100%;
+        padding: 0 15px; /* Add padding for smaller screens */
+    }
+
+    .topbar {
+        padding: 8px 0;
+    }
+
+    .topbar h3 {
+        font-size: 14px; /* Smaller font for mobile */
+    }
+
+    .navbar-brand {
+        position: absolute;
+        top: 18px; /* Adjust positioning */
+        left: 10px;
+    }
+
+    .navbar-brand img {
+        max-width: 150px; /* Smaller logo */
+        margin-top: 18px;
+    }
+
+    .find-box {
+        width: 100%; /* Full width for mobile */
+        padding: 20px; /* Adjust spacing */
+        text-align: center;
+    }
+
+    .find-box h1 {
+        font-size: 28px; /* Adjust font size */
+        line-height: 1.4; /* Improve spacing */
+    }
+
+    .find-box h4 {
+        font-size: 18px; /* Adjust font size */
+        line-height: 1.4;
+    }
+
+    .row {
+        gap: 10px; /* Reduce spacing between items */
+        margin-top: 10px;
+    }
+
+    .box-img {
+        padding: 10px; /* Reduce padding */
+        height: auto;
+        min-height: 150px; /* Adjust height */
+    }
+
+    .box-img img {
+        max-height: 120px; /* Adjust image size */
+    }
+
+    .box-img h4 {
+        font-size: 18px; /* Adjust text size */
+        margin-top: 10px;
+    }
+
+    .copyright {
+        flex-direction: column; 
+        padding: 15px; /* Reduce padding */
+    }
+
+    .copyright img {
+        width: 60px; /* Smaller logo */
+    }
+
+    .copyright p {
+        font-size: 12px; /* Smaller text */
+    }
+}
