@@ -24,7 +24,7 @@
 							<!-- Home Icon and Link -->
 							<li>
 								<div class="flex items-center space-x-1">
-									<a href="/rawboard" class="inline-flex items-center group text-red-600 hover:text-red-600 text-sm font-medium">
+									<a href="/" class="inline-flex items-center group text-red-600 hover:text-red-600 text-sm font-medium">
 										<svg class="w-5 h-5 text-gray-500 mr-1 group-hover:text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 											<path
 												stroke-linecap="round"

@@ -2,17 +2,17 @@
 	<DashboardLayout>
 		<!-- Alert -->
 		<transition name="alert-fade">
-    <div v-if="message && messageType === 'success'" class="flex items-center px-4 py-3 mb-4 bg-green-100 border-t-4 border-green-700 shadow-md">
-      <div class="flex items-center">
-        <!-- Checkmark Icon -->
-        <svg class="w-6 h-6 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        <!-- Alert Text -->
-        <span class="ml-2 font-medium text-green-700">{{ message }}</span>
-      </div>
-    </div>
-  </transition>
+			<div v-if="message && messageType === 'success'" class="flex items-center px-4 py-3 mb-4 bg-green-100 border-t-4 border-green-700 shadow-md">
+				<div class="flex items-center">
+					<!-- Checkmark Icon -->
+					<svg class="w-6 h-6 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+					</svg>
+					<!-- Alert Text -->
+					<span class="ml-2 font-medium text-green-700">{{ message }}</span>
+				</div>
+			</div>
+		</transition>
 
 		<!-- Header Section -->
 		<div class="p-4 mb-6 bg-white rounded-lg shadow-md">
@@ -24,50 +24,34 @@
 							<!-- Home Icon and Link -->
 							<li>
 								<div class="flex items-center space-x-1">
-									<a
-  v-if="$page.props.auth.user.roles[0].name === 'admin'"
-  href="/admin/dashboard"
-  class="inline-flex items-center text-sm font-medium text-red-600 group hover:text-red-700"
->
-  <svg
-    class="w-5 h-5 mr-1 text-gray-500 group-hover:text-red-600"
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
-      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-    />
-  </svg>
-  Admin Dashboard
-</a>
+									<a href="/" class="inline-flex items-center group text-red-600 hover:text-red-600 text-sm font-medium">
+										<svg class="w-5 h-5 text-gray-500 mr-1 group-hover:text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+											/>
+										</svg>
+									</a>
+									<svg class="w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+										<path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+									</svg>
+									<a v-if="$page.props.auth.user.roles[0].name === 'admin'" href="/admin/dashboard" class="inline-flex items-center text-sm font-medium text-black group hover:text-red-700">
+										Admin Dashboard
+									</a>
 
-<a
-  v-if="$page.props.auth.user.roles[0].name === 'clerk'"
-  href="/clerk/dashboard"
-  class="inline-flex items-center text-sm font-medium text-red-600 group hover:text-red-700"
->
-  <svg
-    class="w-5 h-5 mr-1 text-gray-500 group-hover:text-red-600"
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
-      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-    />
-  </svg>
-  Clerk Dashboard
-</a>
-
+									<a v-if="$page.props.auth.user.roles[0].name === 'clerk'" href="/clerk/dashboard" class="inline-flex items-center text-sm font-medium text-red-600 group hover:text-red-700">
+										<svg class="w-5 h-5 mr-1 text-gray-500 group-hover:text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+											/>
+										</svg>
+										Clerk Dashboard
+									</a>
 
 									<svg class="w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
 										<path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
@@ -156,57 +140,58 @@
 					</form>
 					<!-- Filter Dropdown -->
 					<div class="relative inline-block text-left">
-  <!-- Toggle Button -->
-  <button
-    @click="toggleFilterDropdown"
-    id="filterDropdownButton"
-    class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg md:w-auto focus:border-red-500 hover:bg-red-100 hover:text-red-500 focus:z-10 focus:ring-4 focus:ring-red-200 dark:focus:ring-red-700 dark:bg-red-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-blue-400 dark:hover:bg-gray-700"
-    type="button"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="w-4 h-4 mr-2 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-      <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
-    </svg>
-    Filter
-    <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-    </svg>
-  </button>
+						<!-- Toggle Button -->
+						<button
+							@click="toggleFilterDropdown"
+							id="filterDropdownButton"
+							class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg md:w-auto focus:border-red-500 hover:bg-red-100 hover:text-red-500 focus:z-10 focus:ring-4 focus:ring-red-200 dark:focus:ring-red-700 dark:bg-red-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-blue-400 dark:hover:bg-gray-700"
+							type="button"
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="w-4 h-4 mr-2 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+								<path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+							</svg>
+							Filter
+							<svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+								<path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+							</svg>
+						</button>
 
-  <!-- Dropdown Menu -->
-  <div v-show="filterdropdownOpen" id="filterDropdown" class="absolute z-[100] w-48 mt-2 bg-white rounded-lg shadow-lg dark:bg-gray-700 p-3">
-    <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Choose gender</h6>
-    <ul class="space-y-2 text-sm">
-      <li class="flex items-center">
-        <input
-          id="male"
-          type="checkbox"
-          value="male"
-          v-model="selectedGenders"
-          class="w-4 h-4 bg-red-100 border-red-300 rounded focus:ring-2 focus:ring-red-500 focus:outline-none checked:bg-red-500 checked:border-red-500" />
-        <label for="male" class="ml-2 text-sm font-medium text-gray-900 dark:text-white">Male</label>
-      </li>
-      <li class="flex items-center">
-        <input
-          id="female"
-          type="checkbox"
-          value="female"
-          v-model="selectedGenders"
-          class="w-4 h-4 bg-red-100 border-red-300 rounded focus:ring-2 focus:ring-red-500 focus:outline-none checked:bg-red-500 checked:border-red-500" />
-        <label for="female" class="ml-2 text-sm font-medium text-gray-900 dark:text-white">Female</label>
-      </li>
-      <li class="flex items-center">
-        <input
-          id="other"
-          type="checkbox"
-          value="other"
-          v-model="selectedGenders"
-          class="w-4 h-4 bg-red-100 border-red-300 rounded focus:ring-2 focus:ring-red-500 focus:outline-none checked:bg-red-500 checked:border-red-500" />
-        <label for="other" class="ml-2 text-sm font-medium text-gray-900 dark:text-white">Other</label>
-      </li>
-    </ul>
-  </div>
-
-
+						<!-- Dropdown Menu -->
+						<div v-show="filterdropdownOpen" id="filterDropdown" class="absolute z-[100] w-48 mt-2 bg-white rounded-lg shadow-lg dark:bg-gray-700 p-3">
+							<h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Choose gender</h6>
+							<ul class="space-y-2 text-sm">
+								<li class="flex items-center">
+									<input
+										id="male"
+										type="checkbox"
+										value="male"
+										v-model="selectedGenders"
+										class="w-4 h-4 bg-red-100 border-red-300 rounded focus:ring-2 focus:ring-red-500 focus:outline-none checked:bg-red-500 checked:border-red-500"
+									/>
+									<label for="male" class="ml-2 text-sm font-medium text-gray-900 dark:text-white">Male</label>
+								</li>
+								<li class="flex items-center">
+									<input
+										id="female"
+										type="checkbox"
+										value="female"
+										v-model="selectedGenders"
+										class="w-4 h-4 bg-red-100 border-red-300 rounded focus:ring-2 focus:ring-red-500 focus:outline-none checked:bg-red-500 checked:border-red-500"
+									/>
+									<label for="female" class="ml-2 text-sm font-medium text-gray-900 dark:text-white">Female</label>
+								</li>
+								<li class="flex items-center">
+									<input
+										id="other"
+										type="checkbox"
+										value="other"
+										v-model="selectedGenders"
+										class="w-4 h-4 bg-red-100 border-red-300 rounded focus:ring-2 focus:ring-red-500 focus:outline-none checked:bg-red-500 checked:border-red-500"
+									/>
+									<label for="other" class="ml-2 text-sm font-medium text-gray-900 dark:text-white">Other</label>
+								</li>
+							</ul>
+						</div>
 					</div>
 				</div>
 				<!-- Buttons -->
@@ -361,12 +346,13 @@
 		const messageType = ref(props.message_type || 'info');
 		console.log(props.message);   // Log message content
 		console.log(props.message_type); // Log message type
+
 		onMounted(() => {
-	  	setTimeout(() => {
-	    message.value = ''; // Clear the message after 3 seconds
-		messageType.value = '';
-	  }, 3000);
-	});
+	  		setTimeout(() => {
+	    		message.value = ''; // Clear the message after 3 seconds
+				messageType.value = '';
+	  		}, 3000);
+		});
 
 		const addModal = ref(false);
 		const searchQuery = ref('');
@@ -601,12 +587,12 @@
 	};
 </script>
 <style scoped>
-/* Fade transition for the alert */
-.alert-fade-enter-active, .alert-fade-leave-active {
-  transition: opacity 0.5s ease;
-}
+	/* Fade transition for the alert */
+	.alert-fade-enter-active, .alert-fade-leave-active {
+	  transition: opacity 0.5s ease;
+	}
 
-.alert-fade-enter, .alert-fade-leave-to /* .alert-fade-leave-active in <2.1.8 */ {
-  opacity: 0;
-}
+	.alert-fade-enter, .alert-fade-leave-to /* .alert-fade-leave-active in <2.1.8 */ {
+	  opacity: 0;
+	}
 </style>

@@ -1,5 +1,36 @@
 <template>
 	<DashboardLayout>
+		<!-- Alert -->
+		<transition name="alert-fade">
+    <div v-if="message && messageType === 'success'" class="flex items-center px-4 py-3 mb-4 bg-green-100 border-t-4 border-green-700 shadow-md">
+      <div class="flex items-center">
+        <!-- Checkmark Icon -->
+        <svg class="w-6 h-6 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <!-- Alert Text -->
+        <span class="ml-2 font-medium text-green-700">{{ message }}</span>
+      </div>
+    </div>
+  </transition>
+
+  <transition name="alert-fade">
+    <div v-if="message && messageType === 'error'" class="flex items-center px-4 py-3 mb-4 bg-red-100 border-t-4 border-red-700 shadow-md">
+      <div class="flex items-center">
+        <!-- Checkmark Icon -->
+        <svg class="w-6 h-6 text-red-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="red"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+			<g id="SVGRepo_iconCarrier"> <path d="M2.20164 18.4695L10.1643 4.00506C10.9021 2.66498 13.0979 2.66498 13.8357 4.00506L21.7984 18.4695C22.4443 19.6428 21.4598 21 19.9627 21H4.0373C2.54022 21 1.55571 19.6428 2.20164 18.4695Z" 
+				stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12 9V13" stroke="#000000" 
+				stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> 
+			<path d="M12 17.0195V17" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">	
+			</path> </g>
+		</svg>
+        <!-- Alert Text -->
+        <span class="ml-2 font-medium text-red-700">{{ message }}</span>
+      </div>
+    </div>
+  </transition>
+
 		      <div class="bg-white shadow-md rounded-lg p-4 mb-6">
 			<div class="flex justify-between items-center">
 				<!-- Breadcrumbs and Title -->
@@ -116,7 +147,7 @@
 						<div v-show="showReportDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20">
 							<ul class="py-2">
 								<li>
-									<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Total Sales</a>
+									<a href="#" @click.prevent="generateTotalSalesReport" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Total Sales</a>
 								</li>
 								<li>
 									<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Total Discount</a>
@@ -189,10 +220,29 @@
 	import DropdownLink from '@/Components/DropdownLink.vue';
 	import { utils, writeFile } from 'xlsx';
 	import debounce from 'lodash/debounce';
+	import { jsPDF } from "jspdf";
+	import DatePicker from '@/Components/DatePicker.vue';
 
 	const props = defineProps({
 		transactions: Array, // Received from the backend
+		message: String,
+		message_type: String,
 	});
+
+		const message = ref(props.message || '');
+		const messageType = ref(props.message_type || 'info');
+		console.log(props.message);   // Log message content
+		console.log(props.message_type); // Log message type
+
+		watch([message, messageType], () => {
+    if (message.value) {
+        setTimeout(() => {
+            message.value = '';
+            messageType.value = '';
+        }, 3000);
+    }
+});
+
 
 	// Date range filter state
 	const filters = ref({
@@ -227,11 +277,29 @@
   window.removeEventListener('click', handleClickOutside);
 });
 
-	// Generate a specific report
-	const generateReport = (type) => {
-		alert(`Generating ${type} report...`);
-		showReportDropdown.value = false;
-	};
+	// Generate a PDF report for total sales
+	const generateTotalSalesReport = () => {
+    if (!filters.value.startDate || !filters.value.endDate) {
+        message.value = 'Please specify both start and end dates to generate the report!';
+        messageType.value = 'error';
+        return;
+    }
+
+    const filteredData = filteredTransactions.value;
+    let totalSales = 0;
+
+    filteredData.forEach(transaction => {
+        totalSales += parseFloat(transaction.total);
+    });
+
+    const doc = new jsPDF();
+    doc.text("Total Sales Report", 10, 10);
+    doc.text(`Date Range: ${filters.value.startDate || 'N/A'} to ${filters.value.endDate || 'N/A'}`, 10, 20);
+    doc.text(`Total Sales: ₱ ${totalSales.toFixed(2)}`, 10, 30);
+
+    doc.save("Total_Sales_Report.pdf");
+};
+
 
 	// Function to parse the cart_items JSON string into an array of objects
 	const parseCartItems = (cartItems) => {
@@ -344,3 +412,13 @@ const exportToExcel = () => {
 		currentPage.value = page;
 	};
 </script>
+<style scoped>
+/* Fade transition for the alert */
+.alert-fade-enter-active, .alert-fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.alert-fade-enter, .alert-fade-leave-to /* .alert-fade-leave-active in <2.1.8 */ {
+  opacity: 0;
+}
+</style>
