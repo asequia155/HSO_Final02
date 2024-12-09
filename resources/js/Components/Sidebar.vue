@@ -3,7 +3,7 @@
       <!-- Logo -->
       <Link
   v-if="$page.props.auth.user.roles[0].name === 'admin'"
-  class="flex items-center w-full mt-3 px-7"
+  class="flex items-center w-full mt-3 px-4"
   :href="route('admin.dashboard')"
 >
   <div class="flex items-center justify-center">
@@ -13,7 +13,7 @@
 
 <Link
   v-if="$page.props.auth.user.roles[0].name === 'clerk'"
-  class="flex items-center w-full mt-3 px-7"
+  class="flex items-center w-full mt-3 px-4"
   :href="route('clerk.dashboard')"
 >
   <div class="flex items-center justify-center">
@@ -56,7 +56,7 @@
             @click="closeDropdown"
             v-if="$page.props.auth.user.roles[0].name === 'admin'"
             :class="{ 'bg-red-600  font-bold text-white': $page.component === 'Frontend/Patient/Index' }"
-            class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-red-600 hover:text-white"
+            class="flex items-center w-full h-12 px-3 mt-1 rounded hover:bg-red-600 hover:text-white"
             :href="route('patients')"
           >
           <svg class="w-6 h-6 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -69,7 +69,7 @@
           <div class="w-full">
             <button
               @click="toggleDropdown"
-              class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-red-600 hover:text-white"
+              class="flex items-center w-full h-12 px-3 mt-1 rounded hover:bg-red-600 hover:text-white"
               aria-expanded="dropdownOpen"
             >
             <svg class="w-6 h-6 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="black">
@@ -130,7 +130,7 @@
           <!-- Notification -->
           <Link
             @click="closeDropdown"
-            class="relative flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-white"
+            class="relative flex items-center w-full h-12 px-3 mt-1 rounded hover:bg-gray-700 hover:text-white"
             :href="route('placeholder')"
           >
 					<svg class="w-6 h-6 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -143,7 +143,7 @@
           <!-- Settings -->
           <Link
             @click="closeDropdown"
-            class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-white"
+            class="flex items-center w-full h-12 px-3 mt-1 rounded hover:bg-gray-700 hover:text-white"
             :href="route('placeholder')"
           >
 					<svg class="w-6 h-6 stroke-current"  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
