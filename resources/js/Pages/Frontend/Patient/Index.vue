@@ -24,7 +24,7 @@
 							<!-- Home Icon and Link -->
 							<li>
 								<div class="flex items-center space-x-1">
-									<a href="/" class="inline-flex items-center group text-red-600 hover:text-red-600 text-sm font-medium">
+									<a href="/admin/dashboard" class="inline-flex items-center group text-red-600 hover:text-red-600 text-sm font-medium">
 										<svg class="w-5 h-5 text-gray-500 mr-1 group-hover:text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 											<path
 												stroke-linecap="round"
@@ -37,11 +37,11 @@
 									<svg class="w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
 										<path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
 									</svg>
-									<a v-if="$page.props.auth.user.roles[0].name === 'admin'" href="/admin/dashboard" class="inline-flex items-center text-sm font-medium text-black group hover:text-red-700">
+									<a v-if="$page.props.auth.user.roles[0].name === 'admin'" href="/admin/dashboard" class="inline-flex items-center text-sm font-medium text-black group hover:text-red-600">
 										Admin Dashboard
 									</a>
 
-									<a v-if="$page.props.auth.user.roles[0].name === 'clerk'" href="/clerk/dashboard" class="inline-flex items-center text-sm font-medium text-red-600 group hover:text-red-700">
+									<a v-if="$page.props.auth.user.roles[0].name === 'clerk'" href="/clerk/dashboard" class="inline-flex items-center text-sm font-medium text-red-600 group hover:text-red-600">
 										<svg class="w-5 h-5 mr-1 text-gray-500 group-hover:text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 											<path
 												stroke-linecap="round"
@@ -58,7 +58,7 @@
 									</svg>
 
 									<a href="patients" class="inline-flex items-center text-sm font-medium text-red-600">
-										Patient
+										Patients
 									</a>
 								</div>
 							</li>
@@ -234,7 +234,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr v-for="item in paginatedPatients" :key="item.id" class="transition border-b cursor-pointer border-neutral-200 hover:bg-neutral-100" @click="openModal('show', item)">
+						<tr v-for="item in paginatedPatients" :key="item.id" class="transition border-b cursor-pointer border-neutral-200 hover:bg-neutral-100" @click="viewPatientDetails(item)">
 							<td class="px-6 py-3 whitespace-nowrap">{{ item.id }}</td>
 							<td class="px-6 py-3 whitespace-nowrap">{{ item.first_name }}</td>
 							<td class="px-6 py-3 whitespace-nowrap">{{ item.last_name }}</td>
@@ -321,7 +321,7 @@
 
 <script setup>
 		import { ref, watch, computed, defineProps } from 'vue';
-		import { Head } from '@inertiajs/vue3';
+		import { router } from '@inertiajs/vue3';
 		import ShowModal from './Show.vue';
 		import EditModal from './EditPatientModal.vue';
 		import DashboardLayout from '@/Layouts/DashboardLayout.vue';
@@ -381,13 +381,20 @@
 		  if (type === 'edit') {
 		    selectedPatients.value = item; // Set the selected patient
 		    editModal.value = true;
-			filterdropdownOpen.vale = false;
+			filterdropdownOpen.value = false;
 		  } else if (type === 'show') {
 		    selectedPatients.value = item; // Set the selected patient
-		    showModal.value = true;
+		    Inertia.get(`/patients/${item.id}`);
 			filterdropdownOpen.value = false;
 		  }
 		};
+
+		const viewPatientDetails = (item) => {
+  router.get(`/patients/${item.id}`, { patient: item }, {
+    preserveState: true, // Keeps the current state for smooth navigation
+    preserveScroll: true, // Keeps the scroll position
+  });
+};
 
 		const closeModal = () => {
 		  editModal.value = false;

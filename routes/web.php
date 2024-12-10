@@ -46,6 +46,7 @@ Route::get('/products/category', [CategoryController::class, 'index'])->name('pr
 Route::resource('patients', PatientController::class);
 Route::get('/patients', [PatientController::class, 'index'])->name('patients');
 Route::get('/patients/AddPatient', [PatientController::class, 'create'])->name('patients.create');
+Route::get('/patients/{id}', [PatientController::class, 'show'])->name('patients.show');
 Route::resource('pos', POSController::class);
 Route::resource('categories', CategoryController::class);
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories');

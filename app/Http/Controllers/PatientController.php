@@ -34,25 +34,42 @@ class PatientController extends Controller
         */
         public function store(Request $request)
         {
-            $validated = $request->validate([
-                'first_name' => 'required|string|max:255',
-                'last_name' => 'required|string|max:255',
-                'gender' => 'required|string',
-                'email' => 'required|email|unique:patients,email',
-                'phone' => 'required|string|max:15',
-                'occupation' => 'nullable|string|max:255',
-                'date_of_birth' => 'required|date',
-                'address' => 'nullable|string|max:255',
-                'rx' => 'nullable|string|max:255',
-                'od' => 'nullable|string|max:255',
-                'os' => 'nullable|string|max:255',
-                'add' => 'nullable|string|max:255',
-                'pd' => 'nullable|string|max:255',
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'gender' => 'required|string',
+            'email' => 'required|email|unique:patients,email',
+            'phone' => 'required|string',
+            'date_of_birth' => 'required|date',
+            'address' => 'required|string',
+            'rx' => 'nullable|string',
+            'od' => 'nullable|string',
+            'os' => 'nullable|string',
+            'add' => 'nullable|string',
+            'pd' => 'nullable|string',
+        ]);
+
+        // Create the patient
+        $patient = Patient::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'gender' => $request->gender,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'date_of_birth' => $request->date_of_birth,
+            'address' => $request->address,
+        ]);
+
+        // Create the patient's prescription details
+        if ($request->rx || $request->od || $request->os || $request->add || $request->pd) {
+            $patient->prescriptions()->create([
+                'rx' => $request->rx,
+                'od' => $request->od,
+                'os' => $request->os,
+                'add' => $request->add,
+                'pd' => $request->pd,
             ]);
-        
-            // Create a patient with all fields, including prescription details
-            Patient::create($validated);
-            
+        }
             return redirect()->route('patients')
             ->with('message', 'Patient added successfully.')
             ->with('message_type', 'success');
@@ -60,14 +77,12 @@ class PatientController extends Controller
         
         
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
+        public function show($id)
+        {
+            return Inertia::render('Frontend/Patient/PatientDetails', [
+                'patient' => Patient::findOrFail($id),
+            ]);
+        }
     /**
      * Show the form for editing the specified resource.
      */
