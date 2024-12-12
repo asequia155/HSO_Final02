@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 
 use App\Models\PatientPrescription;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Routing\Controller;
+use Inertia\Inertia;
+
 
 class PrescriptionController extends Controller
 {
@@ -27,10 +28,11 @@ class PrescriptionController extends Controller
     
         // Redirect to the patient's detail page with success message
       
-        return redirect()
-    ->route('patients.show', ['id' => $id])
-    ->with('message', 'Prescription added successfully.')
-    ->with('message_type', 'success');
+        return redirect()->route('patients.show', ['id' => $id])
+        ->with('message', 'Prescription added successfully.')
+        ->with('message_type', 'success');
+    
+
 
     }
 

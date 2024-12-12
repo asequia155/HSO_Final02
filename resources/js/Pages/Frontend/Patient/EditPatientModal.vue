@@ -9,10 +9,8 @@
         &times;
       </button>
       <h2 class="text-xl font-semibold mb-4">Edit Patient</h2>
-        <!-- Separator Line -->
-        <hr class="my-6 border-gray-300" />
+      <hr class="my-6 border-gray-300" />
       <form @submit.prevent="submit">
-        <!-- Form grid for a horizontal layout with responsive columns -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <!-- First Name -->
           <div>
@@ -22,9 +20,9 @@
               id="first_name"
               type="text"
               class="border w-full p-2 rounded"
-              required
               placeholder="Enter first name"
             />
+            <p v-if="errors.first_name" class="text-red-500 text-sm mt-1">{{ errors.first_name }}</p>
           </div>
 
           <!-- Last Name -->
@@ -35,20 +33,21 @@
               id="last_name"
               type="text"
               class="border w-full p-2 rounded"
-              required
               placeholder="Enter last name"
             />
+            <p v-if="errors.last_name" class="text-red-500 text-sm mt-1">{{ errors.last_name }}</p>
           </div>
 
           <!-- Gender -->
           <div>
             <label for="gender" class="block mb-2 text-sm font-medium text-gray-900">Gender</label>
-            <select v-model="gender" id="gender" class="border w-full p-2 rounded" required>
+            <select v-model="gender" id="gender" class="border w-full p-2 rounded">
               <option value="" disabled>Select gender</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
               <option value="other">Other</option>
             </select>
+            <p v-if="errors.gender" class="text-red-500 text-sm mt-1">{{ errors.gender }}</p>
           </div>
 
           <!-- Email -->
@@ -59,9 +58,9 @@
               id="email"
               type="email"
               class="border w-full p-2 rounded"
-              required
               placeholder="Enter email"
             />
+            <p v-if="errors.email" class="text-red-500 text-sm mt-1">{{ errors.email }}</p>
           </div>
 
           <!-- Phone -->
@@ -72,10 +71,9 @@
               id="phone"
               type="tel"
               class="border w-full p-2 rounded"
-              required
               placeholder="Enter phone number"
-              autocomplete="tel"
             />
+            <p v-if="errors.phone" class="text-red-500 text-sm mt-1">{{ errors.phone }}</p>
           </div>
 
           <!-- Date of Birth -->
@@ -86,8 +84,8 @@
               id="date_of_birth"
               type="date"
               class="border w-full p-2 rounded"
-              required
             />
+            <p v-if="errors.date_of_birth" class="text-red-500 text-sm mt-1">{{ errors.date_of_birth }}</p>
           </div>
 
           <!-- Address -->
@@ -97,9 +95,9 @@
               v-model="address"
               id="address"
               class="border w-full p-2 rounded"
-              required
               placeholder="Enter address"
             />
+            <p v-if="errors.address" class="text-red-500 text-sm mt-1">{{ errors.address }}</p>
           </div>
 
           <!-- Occupation -->
@@ -109,24 +107,23 @@
               v-model="occupation"
               id="occupation"
               class="border w-full p-2 rounded"
-              required
               placeholder="Enter occupation"
             />
+            <p v-if="errors.occupation" class="text-red-500 text-sm mt-1">{{ errors.occupation }}</p>
           </div>
         </div>
 
-        <!-- Action Buttons -->
         <div class="flex items-center justify-between space-x-4 mt-6">
           <button
             type="button"
             @click="close"
-            class="bg-gray-300 text-black text-sm px-5 py-2.5 rounded hover:bg-gray-400 transition focus:ring-4 focus:outline-none focus:ring-gray-300"
+            class="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400 transition"
           >
             Cancel
           </button>
           <button
             type="submit"
-            class="text-white bg-red-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 flex items-center space-x-2"
+            class="text-white bg-red-500 hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 flex items-center space-x-2"
           >
             <span>Update</span>
           </button>
@@ -137,11 +134,12 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 const props = defineProps(['isOpen', 'patientData']);
-const emit = defineEmits();
+const emit = defineEmits(['close', 'edit']);
 
+// Form fields
 const first_name = ref('');
 const last_name = ref('');
 const gender = ref('');
@@ -150,52 +148,98 @@ const phone = ref('');
 const date_of_birth = ref('');
 const address = ref('');
 const occupation = ref('');
-const rx = ref('');
-const od = ref('');
-const os = ref('');
-const add = ref('');
-const pd = ref('');
 
-// Watch for changes in patientData and update the form fields
-watch(() => props.patientData, (newData) => {
-  if (newData) {
-    first_name.value = newData.first_name || '';
-    last_name.value = newData.last_name || '';
-    gender.value = newData.gender || '';
-    email.value = newData.email || '';
-    phone.value = newData.phone || '';
-    date_of_birth.value = newData.date_of_birth || '';
-    address.value = newData.address || '';
-    occupation.value = newData.occupation || '';
-    rx.value = newData.rx || '';
-    od.value = newData.od || '';
-    os.value = newData.os || '';
-    add.value = newData.add || '';
-    pd.value = newData.pd || '';
+// Error messages
+const errors = ref({
+  first_name: '',
+  last_name: '',
+  gender: '',
+  email: '',
+  phone: '',
+  date_of_birth: '',
+  address: '',
+  occupation: '',
+});
+
+// Watch for changes in patientData to prefill form
+watch(
+  () => props.patientData,
+  (newData) => {
+    if (newData) {
+      first_name.value = newData.first_name || '';
+      last_name.value = newData.last_name || '';
+      gender.value = newData.gender || '';
+      email.value = newData.email || '';
+      phone.value = newData.phone || '';
+      date_of_birth.value = newData.date_of_birth || '';
+      address.value = newData.address || '';
+      occupation.value = newData.occupation || '';
+    }
+  },
+  { immediate: true }
+);
+
+// Validation function
+const validate = () => {
+  let isValid = true;
+  errors.value = {}; // Reset errors
+
+  if (!first_name.value) {
+    errors.value.first_name = 'First name is required.';
+    isValid = false;
   }
-}, { immediate: true });
+  if (!last_name.value) {
+    errors.value.last_name = 'Last name is required.';
+    isValid = false;
+  }
+  if (!gender.value) {
+    errors.value.gender = 'Gender is required.';
+    isValid = false;
+  }
+  if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+    errors.value.email = 'A valid email is required.';
+    isValid = false;
+  }
+  if (!phone.value || phone.value.length !== 10) {
+    errors.value.phone = 'Phone number must be 10 digits.';
+    isValid = false;
+  }
+  if (!date_of_birth.value || isNaN(new Date(date_of_birth.value).getTime())) {
+    errors.value.date_of_birth = 'A valid date is required.';
+    isValid = false;
+  }
+  if (!address.value) {
+    errors.value.address = 'Address is required.';
+    isValid = false;
+  }
+  if (!occupation.value) {
+    errors.value.occupation = 'Occupation is required.';
+    isValid = false;
+  }
 
-const submit = () => {
-  const data = {
-    id: props.patientData.id,
-    first_name: first_name.value,
-    last_name: last_name.value,
-    gender: gender.value,
-    email: email.value,
-    phone: phone.value,
-    date_of_birth: date_of_birth.value,
-    address: address.value,
-    occupation: occupation.value,
-    rx: rx.value,
-    od: od.value,
-    os: os.value,
-    add: add.value,
-    pd: pd.value,
-  };
-  emit('edit', data);
-  emit('close');
+  return isValid;
 };
 
+// Submit handler
+const submit = () => {
+  if (validate()) {
+    const data = {
+      ...props.patientData,
+      first_name: first_name.value,
+      last_name: last_name.value,
+      gender: gender.value,
+      email: email.value,
+      phone: phone.value,
+      date_of_birth: date_of_birth.value,
+      address: address.value,
+      occupation: occupation.value,
+    };
+    emit('edit', data);
+    emit('close');
+  }
+};
+
+// Close handler
 const close = () => {
   emit('close');
 };

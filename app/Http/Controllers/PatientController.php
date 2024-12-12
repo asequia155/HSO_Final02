@@ -102,9 +102,11 @@ class PatientController extends Controller
     /**
      * Update the specified resource in storage.
      */
+
     public function update(Request $request, $id)
     {
         Log::info('Update method reached');
+    
         $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -114,21 +116,21 @@ class PatientController extends Controller
             'date_of_birth' => 'required|date',
             'address' => 'required|string',
             'occupation' => 'nullable|string',
-            'rx' => 'nullable|string|max:255',
-            'od' => 'nullable|string|max:255',
-            'os' => 'nullable|string|max:255',
-            'add' => 'nullable|string|max:255',
-            'pd' => 'nullable|string|max:255',
         ]);
-        
+    
         // Find and update the patient
         $patient = Patient::findOrFail($id);
         $patient->update($validatedData);
-
-        return redirect()->route('patients.show', $id)
-        ->with('message', 'Patient updated successfully.')
+    
+        // Prepare updated data to send to the frontend
+        $updatedPatient = Patient::find($id);
+    
+        // Re-render the page with the updated patient data and flash message
+        return redirect()->route('patients.show', ['id' => $id])
+        ->with('message', 'Prescription added successfully.')
         ->with('message_type', 'success');
     }
+    
     
     public function destroy(Patient $patient)
     {
