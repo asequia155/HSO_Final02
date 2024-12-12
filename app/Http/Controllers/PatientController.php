@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Patient;
-use App\Models\PatientPrescription;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Routing\Controller;
@@ -40,6 +39,7 @@ class PatientController extends Controller
             'last_name' => 'required|string|max:255',
             'gender' => 'required|string',
             'email' => 'required|email|unique:patients,email',
+            'occupation' => 'required|string|max:255',
             'phone' => 'required|string',
             'date_of_birth' => 'required|date',
             'address' => 'required|string',
@@ -56,6 +56,7 @@ class PatientController extends Controller
             'last_name' => $request->last_name,
             'gender' => $request->gender,
             'email' => $request->email,
+            'occupation' => $request->occupation,
             'phone' => $request->phone,
             'date_of_birth' => $request->date_of_birth,
             'address' => $request->address,
@@ -124,7 +125,7 @@ class PatientController extends Controller
         $patient = Patient::findOrFail($id);
         $patient->update($validatedData);
 
-        return redirect()->route('patients')
+        return redirect()->route('patients.show', $id)
         ->with('message', 'Patient updated successfully.')
         ->with('message_type', 'success');
     }

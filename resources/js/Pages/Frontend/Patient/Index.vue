@@ -2,7 +2,7 @@
 	<DashboardLayout>
 		<!-- Alert -->
 		<transition name="alert-fade">
-			<div v-if="message && messageType === 'success'" class="flex items-center px-4 py-3 mb-4 bg-green-100 border-t-4 border-green-700 shadow-md">
+			<div v-if="messageType === 'success'" class="flex items-center px-4 py-3 mb-4 bg-green-100 border-t-4 border-green-700 shadow-md">
 				<div class="flex items-center">
 					<!-- Checkmark Icon -->
 					<svg class="w-6 h-6 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -58,7 +58,7 @@
 									</svg>
 
 									<a href="patients" class="inline-flex items-center text-sm font-medium text-red-600">
-										Patients
+										Patients List
 									</a>
 								</div>
 							</li>
@@ -275,16 +275,6 @@
         Preview
     </button>
 </li>
-
-										<li>
-											<button @click.stop="openModal('edit', item)" class="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white dark:text-gray-200">
-												<svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-													<path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-													<path fill-rule="evenodd" clip-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-												</svg>
-												Edit
-											</button>
-										</li>
 										<li>
 											<button
 												@click.stop="openDeleteModal(item.first_name + ' ' + item.last_name, item.id)"
@@ -327,10 +317,6 @@
 
 		<!-- Modal Component -->
 		<ShowModal :isOpen="showModal" :patients="selectedPatients" @close="closeModal" />
-		<EditModal :isOpen="editModal" :patientData="selectedPatients" @close="closeModal" @edit="updatePatient" />
-
-		<!-- <EditModal :isOpen="editModal" :patientData="selectedPatients" @close="closeModal" @save="updatePatient" /> -->
-
 		<AddPatientModal :isOpen="addModal" :patients="patients" @close="closeAddModal" @add="addPatient" />
 		<DeletePatientModal :isOpen="deleteModal" :patientName="patientNameToDelete" @close="closeDeleteModal" @confirm="confirmDeletePatient" />
 	</DashboardLayout>
@@ -375,7 +361,6 @@
 		const searchQuery = ref('');
 		const currentPage = ref(1);
 		const itemsPerPage = ref(5);
-		const flashMessage = ref(null);
 		const showModal = ref(false);
 		const editModal = ref(false);
 		const selectedPatients = ref(null); // Initialized as null
@@ -391,20 +376,6 @@
 		  filterdropdownOpen.value = !filterdropdownOpen.value;
 		}
 
-		// Modal management SHOW and EDIT/Update
-		const openModal = (type, item) => {
-		  closeDropdown(); // Close the dropdown whenever a modal is opened
-
-		  if (type === 'edit') {
-		    selectedPatients.value = item; // Set the selected patient
-		    editModal.value = true;
-			filterdropdownOpen.value = false;
-		  } else if (type === 'show') {
-		    selectedPatients.value = item; // Set the selected patient
-		    Inertia.get(`/patients/${item.id}`);
-			filterdropdownOpen.value = false;
-		  }
-		};
 
 		const viewPatientDetails = (item) => {
   router.get(`/patients/${item.id}`, { patient: item }, {
@@ -443,19 +414,6 @@
 		  return filteredData;
 		});
 
-		const updatePatient = (updatedPatient) => {
-		  console.log('Updated patient data:', updatedPatient); // Check updated patient data
-		  Inertia.put(route('patients.update', updatedPatient.id), updatedPatient, {
-		    onSuccess: () => {
-		      flashMessage.value = 'Patient updated successfully!';
-		      close();
-		    },
-		    onError: (errors) => {
-		      console.error('Error updating patient:', errors);
-		      flashMessage.value = 'Error updating patient. Please try again.';
-		    },
-		  });
-		};
 
 		//Delete Patient Function
 		const deletePatient = (patientId) => {
