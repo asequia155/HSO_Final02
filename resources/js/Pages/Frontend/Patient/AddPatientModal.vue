@@ -9,6 +9,8 @@
         &times;
       </button>
       <h2 class="text-xl font-semibold mb-4">Add Patient</h2>
+        <!-- Separator Line -->
+        <hr class="my-6 border-gray-300" />
       <form @submit.prevent="submit">
         <!-- Form grid for a horizontal layout with responsive columns -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

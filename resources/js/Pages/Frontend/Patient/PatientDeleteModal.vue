@@ -17,7 +17,7 @@
         <div class="p-4 text-left">
           <!-- Main content or slot area -->
           <p class="text-gray-700 dark:text-gray-300 mb-4">
-            Are you sure you want to delete this patient: <strong>{{ patientName }}</strong>?
+            Are you sure you want to delete this patient recorn in: <strong>{{ patientName }}</strong>?
           </p>
   
           <div class="flex justify-end space-x-4">

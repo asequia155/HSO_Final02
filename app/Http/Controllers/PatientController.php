@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Patient;
+use App\Models\PatientPrescription;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Routing\Controller;
@@ -78,11 +79,13 @@ class PatientController extends Controller
         
 
         public function show($id)
-        {
-            return Inertia::render('Frontend/Patient/PatientDetails', [
-                'patient' => Patient::findOrFail($id),
-            ]);
-        }
+    {
+        $patient = Patient::with('prescriptions')->findOrFail($id);
+
+        return Inertia::render('Frontend/Patient/PatientDetails', [
+            'patient' => $patient,
+        ]);
+    }
     /**
      * Show the form for editing the specified resource.
      */

@@ -141,22 +141,9 @@
 					</button>
 					<!-- Generate Report -->
 					<div class="relative">
-						<button @click="toggleReportDropdown" class="bg-red-600 text-white font-semibold px-4 py-2 rounded-lg text-sm hover:bg-gray-600 transition duration-300">
+						<button  @click.prevent="generateTotalSalesReport" class="bg-red-600 text-white font-semibold px-4 py-2 rounded-lg text-sm hover:bg-gray-600 transition duration-300">
 							Generate Report
 						</button>
-						<div v-show="showReportDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20">
-							<ul class="py-2">
-								<li>
-									<a href="#" @click.prevent="generateTotalSalesReport" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Total Sales</a>
-								</li>
-								<li>
-									<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Total Discount</a>
-								</li>
-								<li>
-									<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Total Tax</a>
-								</li>
-							</ul>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -252,11 +239,6 @@
 
 	// Toggle for the report dropdown
 	const showReportDropdown = ref(false);
-
-	// Function to toggle the report dropdown
-	const toggleReportDropdown = () => {
-		showReportDropdown.value = !showReportDropdown.value;
-	};
 
 	// Function to handle clicks outside of dropdown to close it
 	const handleClickOutside = (event) => {

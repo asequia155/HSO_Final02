@@ -8,6 +8,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\POSController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PrescriptionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -43,10 +44,18 @@ Route::get('/placeholder', function () {
 // Resource routes
 Route::resource('products', ProductController::class);
 Route::get('/products/category', [CategoryController::class, 'index'])->name('products.category');
+
 Route::resource('patients', PatientController::class);
 Route::get('/patients', [PatientController::class, 'index'])->name('patients');
 Route::get('/patients/AddPatient', [PatientController::class, 'create'])->name('patients.create');
 Route::get('/patients/{id}', [PatientController::class, 'show'])->name('patients.show');
+Route::post('/patients/{id}/prescriptions', [PrescriptionController::class, 'store']);
+Route::delete('/patients/{patientId}/prescriptions/{prescriptionId}', [PrescriptionController::class, 'destroy'])->name('prescriptions.destroy');
+Route::put('/patients/{patientId}/prescriptions/{prescriptionId}', [PrescriptionController::class, 'update'])->name('prescriptions.update');
+
+
+
+
 Route::resource('pos', POSController::class);
 Route::resource('categories', CategoryController::class);
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories');

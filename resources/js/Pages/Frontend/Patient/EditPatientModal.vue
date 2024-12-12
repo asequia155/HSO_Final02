@@ -9,6 +9,8 @@
         &times;
       </button>
       <h2 class="text-xl font-semibold mb-4">Edit Patient</h2>
+        <!-- Separator Line -->
+        <hr class="my-6 border-gray-300" />
       <form @submit.prevent="submit">
         <!-- Form grid for a horizontal layout with responsive columns -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -109,73 +111,6 @@
               class="border w-full p-2 rounded"
               required
               placeholder="Enter occupation"
-            />
-          </div>
-        </div>
-
-        <!-- Separator Line -->
-        <hr class="my-6 border-gray-300" />
-
-        <!-- Eye Prescription Fields Section -->
-        <h3 class="text-lg font-semibold mb-4">Eye Prescription Details</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <!-- RX (Prescription) -->
-          <div>
-            <label for="rx" class="block mb-2 text-sm font-medium text-gray-900">RX (Prescription)</label>
-            <input
-              v-model="rx"
-              id="rx"
-              type="text"
-              class="border w-full p-2 rounded"
-              placeholder="Enter prescription"
-            />
-          </div>
-
-          <!-- OD (Right Eye) -->
-          <div>
-            <label for="od" class="block mb-2 text-sm font-medium text-gray-900">OD (Right Eye)</label>
-            <input
-              v-model="od"
-              id="od"
-              type="text"
-              class="border w-full p-2 rounded"
-              placeholder="Enter right eye value"
-            />
-          </div>
-
-          <!-- OS (Left Eye) -->
-          <div>
-            <label for="os" class="block mb-2 text-sm font-medium text-gray-900">OS (Left Eye)</label>
-            <input
-              v-model="os"
-              id="os"
-              type="text"
-              class="border w-full p-2 rounded"
-              placeholder="Enter left eye value"
-            />
-          </div>
-
-          <!-- Add (Addition) -->
-          <div>
-            <label for="add" class="block mb-2 text-sm font-medium text-gray-900">Add (Addition)</label>
-            <input
-              v-model="add"
-              id="add"
-              type="text"
-              class="border w-full p-2 rounded"
-              placeholder="Enter addition value"
-            />
-          </div>
-
-          <!-- PD (Pupillary Distance) -->
-          <div>
-            <label for="pd" class="block mb-2 text-sm font-medium text-gray-900">PD (Pupillary Distance)</label>
-            <input
-              v-model="pd"
-              id="pd"
-              type="text"
-              class="border w-full p-2 rounded"
-              placeholder="Enter pupillary distance"
             />
           </div>
         </div>
