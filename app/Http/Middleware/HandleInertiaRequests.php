@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Middleware;
+use App\Models\Notification;
+
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -38,7 +40,9 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
             'message' => fn () => $request->session()->get('message'),
             'message_type' => fn () => $request->session()->get('message_type'),
+            'notifications' => Notification::latest()->take(3)->get(),
         ],
         ];
+        
     }
 }

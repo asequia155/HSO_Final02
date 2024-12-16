@@ -8,6 +8,22 @@
             </svg>
             <h1 class="text-xl font-semibold text-gray-900 mt-1">Dashboard</h1>
         </div>
+        <!-- <div>
+    <button @click="toggleDropdown">🔔</button>
+    <div v-if="dropdownOpen">
+      <ul>
+        <li v-for="notification in notifications" :key="notification.id">
+          <div>
+            <h4>{{ notification.title }}</h4>
+            <p>{{ notification.message }}</p>
+            <button @click="markAsRead(notification.id)">Mark as Read</button>
+            <button @click="deleteNotification(notification.id)">Delete</button>
+          </div>
+        </li>
+      </ul>
+      <div v-if="notifications.length === 0">No new notifications</div>
+    </div>
+  </div> -->
         <div class="flex items-center space-x-3">
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 <div class="ml-3 relative">
@@ -51,4 +67,46 @@
 <script setup>
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
+
+// import { ref, watch } from "vue";
+// import { Inertia } from "@inertiajs/inertia";
+
+// // Props passed from Laravel via Inertia
+// defineProps({
+//   initialNotifications: Array, // Prop for the initial list of notifications
+// });
+
+// const notifications = ref([...initialNotifications]); // Reactive list of notifications
+// const dropdownOpen = ref(false);
+
+// // Toggle dropdown visibility
+// const toggleDropdown = () => {
+//   dropdownOpen.value = !dropdownOpen.value;
+//   if (dropdownOpen.value) {
+//     fetchNotifications();
+//   }
+// };
+
+// // Fetch updated notifications (if needed)
+// const fetchNotifications = () => {
+//   Inertia.get("/notifications", {}, { preserveState: true }).then(({ props }) => {
+//     notifications.value = props.notifications;
+//   });
+// };
+
+// // Mark a single notification as read
+// const markAsRead = (id) => {
+//   Inertia.post(`/notifications/${id}/read`, {}, { preserveState: true }).then(() => {
+//     // Update notifications locally after marking as read
+//     notifications.value = notifications.value.filter((n) => n.id !== id);
+//   });
+// };
+
+// // Delete a notification
+// const deleteNotification = (id) => {
+//   Inertia.delete(`/notifications/${id}`, { preserveState: true }).then(() => {
+//     // Update notifications locally after deletion
+//     notifications.value = notifications.value.filter((n) => n.id !== id);
+//   });
+// };
 </script>

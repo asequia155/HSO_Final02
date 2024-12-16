@@ -54,6 +54,7 @@ class POSController extends Controller
         $validated = $request->validate([
             'customer_name' => 'required|string|max:255',
             'total' => 'required|numeric',
+            'tax' => 'required|numeric', // Validate the tax
             'discount_amount' => 'nullable|numeric',
             'cart_items' => 'required|array',
         ]);
@@ -64,6 +65,7 @@ class POSController extends Controller
         Transaction::create([
             'customer_name' => $validated['customer_name'],
             'total' => $validated['total'],
+            'tax' => $validated['tax'], // Save the tax to the database
             'discount_amount' => $discountAmount,
             'cart_items' => json_encode($validated['cart_items']),
         ]);

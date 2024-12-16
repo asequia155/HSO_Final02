@@ -51,9 +51,10 @@
       <div class="flex justify-end font-semibold text-gray-700">
         <div class="w-1/2 text-right">
           <p class="text-lg">Subtotal: ₱ {{ transaction.total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</p>
+          <p class="text-lg">VAT (12%): ₱ {{ vatAmount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</p>
           <p class="text-lg">Discount: -₱ {{ transaction.discount_amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</p>
           <hr class="my-2 border-gray-300">
-          <p class="text-xl">Total: ₱ {{ (transaction.total - transaction.discount_amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</p>
+          <p class="text-xl">Total: ₱ {{ ((transaction.total + vatAmount) - transaction.discount_amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</p>
         </div>
       </div>
 
@@ -90,12 +91,26 @@ const companyAddress = 'Gen. Aguinaldo St., Iligan City';
 const companyPhone = '+1 234 567 890';
 const companyEmail = 'hollywoodspectaclesiligan@domain.com';
 
+const vatRate = 0.12; // 12% VAT rate
+
+const vatAmount = computed(() => {
+  return props.transaction.total * vatRate; // Calculate VAT as 12% of the total
+});
+
 function closeModal() {
   emit('close');
 }
 
 function confirmInvoice() {
-  emit('confirm', props.transaction);
+  const updatedTotal = (props.transaction.total + vatAmount.value) - props.transaction.discount_amount;
+
+  emit('confirm', { 
+    ...props.transaction, 
+    tax: vatAmount.value, // Send VAT as 'tax'
+    total: updatedTotal // Update the 'total' field with the new value
+  });
+
   closeModal();
 }
+
 </script>

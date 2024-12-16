@@ -15,6 +15,7 @@ class Transaction extends Model
         'customer_name',
         'total',
         'discount_amount',
+        'tax',
         'cart_items'
     ];
 
@@ -22,6 +23,7 @@ class Transaction extends Model
     protected $casts = [
         'cart_items' => 'array', // Automatically cast JSON data to an array
         'total' => 'float',      // Ensure total is handled as a float
+        'tax' => 'decimal:2',
         'discount_amount' => 'float'
     ];
 }

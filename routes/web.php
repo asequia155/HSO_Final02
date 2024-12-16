@@ -10,6 +10,7 @@ use App\Http\Controllers\POSController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PrescriptionController;
 use Illuminate\Foundation\Application;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -54,7 +55,10 @@ Route::delete('/patients/{patientId}/prescriptions/{prescriptionId}', [Prescript
 Route::put('/patients/{patientId}/prescriptions/{prescriptionId}', [PrescriptionController::class, 'update'])->name('prescriptions.update');
 
 
-
+Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
+Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
 
 Route::resource('pos', POSController::class);
 Route::resource('categories', CategoryController::class);
