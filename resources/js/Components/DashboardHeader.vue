@@ -8,8 +8,14 @@
             </svg>
             <h1 class="text-xl font-semibold text-gray-900 mt-1">Dashboard</h1>
         </div>
-        <!-- <div>
-    <button @click="toggleDropdown">🔔</button>
+
+        <div class="flex items-center space-x-3">
+            <div class="mt-2" style="margin-right: -10px;">
+    <button @click="toggleDropdown">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405C18.317 14.74 18 13.38 18 12V9c0-3.866-3.134-7-7-7S4 5.134 4 9v3c0 1.38-.317 2.74-.595 3.595L2 17h5m8 0a3 3 0 01-6 0m6 0H9" />
+      </svg>
+    </button>
     <div v-if="dropdownOpen">
       <ul>
         <li v-for="notification in notifications" :key="notification.id">
@@ -23,8 +29,8 @@
       </ul>
       <div v-if="notifications.length === 0">No new notifications</div>
     </div>
-  </div> -->
-        <div class="flex items-center space-x-3">
+  </div>
+
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 <div class="ml-3 relative">
                     <Dropdown align="right" width="48">

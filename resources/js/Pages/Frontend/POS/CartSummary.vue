@@ -98,24 +98,25 @@ const discountAmountFormatted = computed(() => discountAmount.value.toFixed(2));
 
 // Process payment
 const processPayment = () => {
-	if (!name.value.trim()) {
-		message.value = 'Customer name is required.';
-		return;
-	}
+  if (!name.value.trim()) {
+    message.value = 'Customer name is required.';
+    return;
+  }
 
-	// Emit payload to the parent
-	const payload = {
-		customer_name: name.value,
-		total: cartTotal.value,
-		discount_amount: discountAmount.value,
-		cart_items: props.cartItems.map((item) => ({
-			product_name: item.name,
-			price: item.price,
-			quantity: item.quantity,
-		})),
-	};
+  // Emit payload to the parent
+  const payload = {
+    customer_name: name.value,
+    total: cartTotal.value,
+    discount_amount: discountAmount.value,
+    cart_items: props.cartItems.map((item) => ({
+      id: item.id, // Include product ID
+      product_name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+    })),
+  };
 
-	message.value = ''; // Clear any previous error messages
-	emit('processPayment', payload);
+  message.value = ''; // Clear any previous error messages
+  emit('processPayment', payload);
 };
 </script>

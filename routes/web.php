@@ -45,6 +45,8 @@ Route::get('/placeholder', function () {
 // Resource routes
 Route::resource('products', ProductController::class);
 Route::get('/products/category', [CategoryController::class, 'index'])->name('products.category');
+Route::put('/products/{id}/add-stock', [ProductController::class, 'addStock'])->name('products.addStock');
+
 
 Route::resource('patients', PatientController::class);
 Route::get('/patients', [PatientController::class, 'index'])->name('patients');

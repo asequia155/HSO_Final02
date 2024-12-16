@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -54,45 +55,68 @@ class POSController extends Controller
         $validated = $request->validate([
             'customer_name' => 'required|string|max:255',
             'total' => 'required|numeric',
-            'tax' => 'required|numeric', // Validate the tax
+            'tax' => 'required|numeric',
             'discount_amount' => 'nullable|numeric',
             'cart_items' => 'required|array',
+            'cart_items.*.product_name' => 'required|string',
+            'cart_items.*.quantity' => 'required|integer|min:1',
         ]);
     
         $discountAmount = $validated['discount_amount'] ?? 0;
     
-        // Create the transaction and store it in the database
-        Transaction::create([
-            'customer_name' => $validated['customer_name'],
-            'total' => $validated['total'],
-            'tax' => $validated['tax'], // Save the tax to the database
-            'discount_amount' => $discountAmount,
-            'cart_items' => json_encode($validated['cart_items']),
-        ]);
-        
-        return redirect()->route('pos.index')
-        ->with('message', 'Payment processed.')
-        ->with('message_type', 'success');    
-    }
-
-    public function getTransactionReport(Request $request)
-    {
-        // Log the incoming request
-        \Log::info('Transaction Report Request', $request->all());
+        // Begin a transaction
+        DB::beginTransaction();
     
-        $request->validate([
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
-        ]);
+        try {
+            $updatedCartItems = [];
     
-        $transactions = Transaction::whereBetween('created_at', [
-            $request->start_date,
-            $request->end_date,
-        ])->get();
+            // Deduct product quantities from inventory and add price to cart items
+            foreach ($validated['cart_items'] as $item) {
+                // Find the product by name or another unique identifier
+                $product = Product::where('name', $item['product_name'])->first();
     
-        return inertia('Frontend/POS/GetTransactionHistory', [
-            'transactions' => $transactions,
-        ]);
+                if ($product) {
+                    $product->quantity -= $item['quantity'];
+    
+                    // Prevent negative inventory
+                    if ($product->quantity < 0) {
+                        throw new \Exception("Insufficient stock for {$product->name}.");
+                    }
+    
+                    $product->save();
+    
+                    // Add price to the cart item
+                    $updatedCartItems[] = [
+                        'product_name' => $item['product_name'],
+                        'quantity' => $item['quantity'],
+                        'price' => $product->price, // Add the price from the Product model
+                    ];
+                }
+            }
+    
+            // Create the transaction record
+            Transaction::create([
+                'customer_name' => $validated['customer_name'],
+                'total' => $validated['total'],
+                'tax' => $validated['tax'],
+                'discount_amount' => $discountAmount,
+                'cart_items' => json_encode($updatedCartItems), // Save updated cart items with prices
+            ]);
+    
+            // Commit the transaction
+            DB::commit();
+    
+            return redirect()->route('pos.index')
+                ->with('message', 'Payment processed successfully!')
+                ->with('message_type', 'success');
+        } catch (\Exception $e) {
+            // Rollback in case of error
+            DB::rollBack();
+    
+            return redirect()->route('pos.index')
+                ->with('message', $e->getMessage())
+                ->with('message_type', 'error');
+        }
     }
     
     

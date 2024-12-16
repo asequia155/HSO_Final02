@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Notification;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller
@@ -16,7 +17,8 @@ class NotificationController extends Controller
         $notifications = Notification::latest()->take(3)->get();
 
         // Return the notifications as a response (or pass to Inertia)
-        return response()->json($notifications);
+        return Inertia::render('Frontend/Notification/Index', [         
+        ]);
     }
 
     /**

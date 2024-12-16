@@ -154,8 +154,9 @@
 							<tr>
 								<th class="px-6 py-4">Date</th>
 								<th class="px-6 py-4">Customer Name</th>
-								<th class="px-6 py-4">Total</th>
+								<th class="px-6 py-4">Tax</th>
 								<th class="px-6 py-4">Discount</th>
+								<th class="px-6 py-4">Total</th>
 								<th class="px-6 py-4">Cart Items</th>
 							</tr>
 						</thead>
@@ -163,8 +164,9 @@
 							<tr v-for="transaction in paginatedTransactions" :key="transaction.id" class="border-b border-neutral-200 transition hover:bg-neutral-100">
 								<td class="whitespace-nowrap px-6 py-4">{{ formatDate(transaction.created_at) }}</td>
 								<td class="whitespace-nowrap px-6 py-4">{{ transaction.customer_name }}</td>
-								<td class="whitespace-nowrap px-6 py-4">₱ {{ formatCurrency(transaction.total) }}</td>
+								<td class="whitespace-nowrap px-6 py-4">₱ {{ formatCurrency(transaction.tax) }}</td>
 								<td class="whitespace-nowrap px-6 py-4">{{ formatCurrency(transaction.discount_amount) }}</td>
+								<td class="whitespace-nowrap px-6 py-4">₱ {{ formatCurrency(transaction.total) }}</td>
 								<td class="whitespace-nowrap px-6 py-4">
 									<ul>
 										<li v-for="(item, index) in parseCartItems(transaction.cart_items)" :key="index">
@@ -326,7 +328,7 @@
 	// Function to export table data to Excel
 // Function to export table data to Excel
 const exportToExcel = () => {
-    const headers = ['Date', 'Customer Name', 'Total', 'Discount', 'Cart Items'];
+    const headers = ['Date', 'Customer Name', 'Tax', 'Discount', 'Total', 'Cart Items']; // Add "Tax" and reorder as per your table
 
     const data = filteredTransactions.value.map((transaction) => {
         // Parse cart items and convert them to a readable format
@@ -337,34 +339,19 @@ const exportToExcel = () => {
         return [
             formatDate(transaction.created_at),
             transaction.customer_name,
-            formatCurrency(transaction.total),
+            formatCurrency(transaction.tax), // Add tax field
             formatCurrency(transaction.discount_amount),
+            formatCurrency(transaction.total),
             cartItems
         ];
     });
 
     const worksheet = utils.aoa_to_sheet([headers, ...data]);
-    
-    // Get the range of the worksheet
-    const range = utils.decode_range(worksheet['!ref']);
-
-    // Set wrapText for all cells in the "Cart Items" column (the last column)
-    for (let row = range.s.r; row <= range.e.r; row++) {
-        const cellAddress = utils.encode_cell({ r: row, c: headers.length - 1 }); // Last column index is headers.length - 1
-        if (!worksheet[cellAddress]) continue; // Skip if cell does not exist
-
-        // Apply wrapText style
-        worksheet[cellAddress].s = {
-            alignment: {
-                wrapText: true, // Enable wrapping text for cells
-            },
-        };
-    }
-
     const workbook = utils.book_new();
     utils.book_append_sheet(workbook, worksheet, 'Transaction History');
     writeFile(workbook, 'Transaction_History.xlsx');
 };
+
 
 
 
