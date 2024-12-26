@@ -13,6 +13,7 @@ class Product extends Model
     protected $table = 'products';
 
     protected $fillable = [
+        'product_code', // Add product_code to fillable attributes
         'name', 
         'price', 
         'category_id', 

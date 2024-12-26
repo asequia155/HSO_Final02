@@ -20,6 +20,13 @@
           <!-- Modal Body -->
           <form @submit.prevent="submit" class="p-4 md:p-5">
             <div class="grid gap-4 mb-4 grid-cols-1 sm:grid-cols-2">
+
+               <!-- Product Code -->
+            <div class="col-span-2">
+              <label for="product_code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product Code</label>
+              <input v-model="product.product_code" id="product_code" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Enter product code" />
+              <p v-if="errors.product_code" class="text-red-500 text-sm mt-1">{{ errors.product_code }}</p>
+            </div>
               
               <!-- Product Name -->
               <div class="col-span-2">
@@ -70,74 +77,94 @@
   </template>
   
   <script setup>
-  import { ref, defineProps, defineEmits } from 'vue';
+import { ref, defineProps, defineEmits } from 'vue';
+
+const props = defineProps({
+  categories: {
+    type: Array,
+    required: true,
+  },
+  isOpen: {
+    type: Boolean,
+    required: true,
+  },
+  existingProductCodes: {
+    type: Array,
+    required: true,
+  },
+});
+
+const emit = defineEmits(['add', 'close']);
+const product = ref({
+  product_code: '',
+  name: '',
+  price: null,
+  category_id: null,
+  description: '',
+  quantity: 0,
+});
+
+const errors = ref({
+  product_code: '',
+  name: '',
+  price: '',
+  category_id: '',
+});
+
+const validate = () => {
+  let isValid = true;
+  errors.value = {}; // Reset errors
+
+  // Check if product code is provided
+  if (!product.value.product_code) {
+    errors.value.product_code = 'Product code is required.';
+    isValid = false;
+  } 
+  // Check if product code already exists
+  else if (props.existingProductCodes.includes(product.value.product_code)) {
+    errors.value.product_code = 'Product code already exists.';
+    isValid = false;
+  }
   
-  const props = defineProps({
-    categories: {
-      type: Array,
-      required: true,
-    },
-    isOpen: {
-      type: Boolean,
-      required: true,
-    },
-  });
-  
-  const emit = defineEmits(['add', 'close']);
-  const product = ref({
-    name: '',
-    price: null, // Initialize with null to avoid initial invalid values
-    category_id: null, // Store category ID here
-    description: '',
-  });
-  
-  const errors = ref({
-    name: '',
-    price: '',
-    category_id: '',
-  });
-  
-  const validate = () => {
-    let isValid = true;
-    errors.value = {}; // Reset errors
-  
-    if (!product.value.name) {
-      errors.value.name = 'Product name is required.';
-      isValid = false;
-    }
-    if (product.value.price === null || product.value.price <= 0) {
-      errors.value.price = 'Price must be greater than 0.';
-      isValid = false;
-    }
-    if (!product.value.category_id) {
-      errors.value.category_id = 'Please select a category.';
-      isValid = false;
-    }
-  
-    return isValid;
-  };
-  
-  const submit = () => {
-    if (validate()) {
-      emit('add', {
-        name: product.value.name, // Product Name
-        price: product.value.price, // Product Price
-        category_id: product.value.category_id, // Selected Category ID
-        description: product.value.description, // Product Description
-      });
-      resetForm();
-      emit('close');
-    }
-  };
-  
-  const resetForm = () => {
-    product.value = { name: '', price: null, category_id: null, description: '' }; // Reset all fields
-    errors.value = {}; // Reset errors
-  };
-  
-  const close = () => {
+  // Validate other fields
+  if (!product.value.name) {
+    errors.value.name = 'Product name is required.';
+    isValid = false;
+  }
+  if (product.value.price === null || product.value.price <= 0) {
+    errors.value.price = 'Price must be greater than 0.';
+    isValid = false;
+  }
+  if (!product.value.category_id) {
+    errors.value.category_id = 'Please select a category.';
+    isValid = false;
+  }
+
+  return isValid;
+};
+
+const submit = () => {
+  if (validate()) {
+    emit('add', {
+      product_code: product.value.product_code,
+      name: product.value.name,
+      price: product.value.price,
+      category_id: product.value.category_id,
+      description: product.value.description,
+      quantity: product.value.quantity
+    });
     resetForm();
     emit('close');
-  };
-  </script>
-  
+  }
+};
+
+const resetForm = () => {
+  product.value = { product_code: '', name: '', price: null, category_id: null, description: '' };
+  errors.value = {};
+};
+
+const close = () => {
+  resetForm();
+  emit('close');
+};
+</script>

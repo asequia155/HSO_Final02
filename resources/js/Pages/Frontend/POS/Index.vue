@@ -146,7 +146,7 @@
               <table v-else class="min-w-full text-left text-sm font-light text-gray-700">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-200">
                   <tr>
-                    <th scope="col" class="px-6 py-4">Id</th>
+                    <th scope="col" class="px-6 py-4">Product code</th>
                     <th scope="col" class="px-6 py-4">Name</th>
                     <th scope="col" class="px-6 py-4">Category</th>
                     <th scope="col" class="px-6 py-4">Price</th>
@@ -155,7 +155,7 @@
                 </thead>
                 <tbody>
                   <tr v-for="item in paginatedProducts" :key="item.id" class="border-b border-neutral-200 transition hover:bg-neutral-100">
-                    <td class="whitespace-nowrap px-6 py-4">{{ item.id }}</td>
+                    <td class="whitespace-nowrap px-6 py-4">{{ item.product_code }}</td>
                     <td class="whitespace-nowrap px-6 py-4">{{ item.name }}</td>
                     <td class="whitespace-nowrap px-6 py-4">{{ categoryMap[item.category_id] || 'Uncategorized' }}</td>
                     <td class="whitespace-nowrap px-6 py-4"><a>₱ </a>{{ formatPrice(item.price) }}</td>
@@ -254,12 +254,17 @@
 
     // Computed property for filtering products by search
     const filteredProducts = computed(() => {
-      return props.products.filter(product => {
-        const matchesSearch = product.name.toLowerCase().includes(searchQuery.value.toLowerCase());
-        const matchesCategory = selectedCategory.value === '' || product.category_id === selectedCategory.value;
-        return matchesSearch && matchesCategory;
-      });
-    });
+  return props.products.filter(product => {
+    const matchesSearch = 
+      product.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      product.product_code.toLowerCase().includes(searchQuery.value.toLowerCase()); // Check product_code as well
+
+    const matchesCategory = 
+      selectedCategory.value === '' || product.category_id === selectedCategory.value;
+
+    return matchesSearch && matchesCategory;
+  });
+});
 
     // Computed properties for pagination
     const totalItems = computed(() => filteredProducts.value.length);

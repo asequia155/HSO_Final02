@@ -15,10 +15,12 @@ class ProductController extends Controller
     {
         $products = Product::all();
         $categories = Category::all();
+        $existingProductCodes = Product::pluck('product_code')->toArray(); // Fetch existing product codes
 
         return Inertia::render('Frontend/Product/Index', [
             'products' => $products,
             'categories' => $categories,
+            'existingProductCodes' => $existingProductCodes,
             'message' => session('message'),
             'message_type' => session('message_type'),
         ]);
@@ -47,20 +49,28 @@ class ProductController extends Controller
     }
 
     public function store(Request $request)
-    {
-        // Validate the input data
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'price' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-            'description' => 'nullable|string',
-            'quantity' => 'required|integer|min:0', // Validate quantity
-        ]);
-    
-        // Create a new product
-        Product::create($validated);
+{
+    // Validate the input data
+    $validated = $request->validate([
+        'product_code' => 'required|string|max:255',
+        'name' => 'required|string|max:255',
+        'category_id' => 'required|exists:categories,id',
+        'price' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+        'description' => 'nullable|string',
+        'quantity' => 'required|integer|min:0',
+    ]);
 
-        return redirect()->route('products.index')
+    // Check if the product code already exists
+    if (Product::where('product_code', $validated['product_code'])->exists()) {
+        return redirect()->back()
+            ->withErrors(['product_code' => 'Product code already exists.'])
+            ->withInput();
+    }
+
+    // Create a new product
+    Product::create($validated);
+
+    return redirect()->route('products.index')
         ->with('message', 'Product added successfully.')
         ->with('message_type', 'success');
 }
@@ -70,6 +80,7 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
+        
         return Inertia::render('Frontend/Product/Edit', [
             'product' => $product,
             'categories' => Category::all(), // Ensure categories are available for the edit form
@@ -79,23 +90,24 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
+            'product_code' => 'required|string|max:255', // Add validation for product_code
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
             'description' => 'nullable|string|max:500',
             'category_id' => 'sometimes|nullable|exists:categories,id',
-            'quantity' => 'required|integer|min:0', // Validate if category exists
+            'quantity' => 'required|integer|min:0', // Validate quantity
         ]);
-
+    
         $product = Product::findOrFail($id);
-
+    
         // Set a default category if category_id is not provided or invalid
         $validated['category_id'] = $validated['category_id'] ?? 'others'; // Adjust according to your category table
-
+    
         $product->update($validated);
-
+    
         return redirect()->route('products.index')
-        ->with('message', 'Product updated successfully.')
-        ->with('message_type', 'success');
+            ->with('message', 'Product updated successfully.')
+            ->with('message_type', 'success');
     }
 
     public function addStock(Request $request, $id)

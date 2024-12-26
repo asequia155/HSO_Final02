@@ -19,6 +19,12 @@
         <form @submit.prevent="submit" class="p-4 md:p-5">
           <div class="grid gap-4 mb-4 grid-cols-1 sm:grid-cols-2">
 
+            <!-- Product Code -->
+            <div class="col-span-2">
+              <label for="product_code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product Code</label>
+              <input v-model="product.product_code" id="product_code" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Enter product code" required />
+            </div>
+
             <!-- Product Name -->
             <div class="col-span-2">
               <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
@@ -71,6 +77,7 @@ const props = defineProps(['isOpen', 'product', 'categories']);
 const emit = defineEmits();
 
 const product = ref({
+  product_code: '',
   name: '',
   price: null,
   description: '',
@@ -83,6 +90,7 @@ watch(
   (newValue) => {
     if (newValue) {
       product.value = {
+        product_code: newValue.product_code || '',
         name: newValue.name || '',
         price: newValue.price || null,
         description: newValue.description || '',
@@ -97,6 +105,7 @@ watch(
 const submit = () => {
   product.value.name = product.value.name.trim();
   product.value.description = product.value.description.trim();
+  product.value.product_code = product.value.product_code.trim();
 
   console.log('Submitting Updated Product:', product.value);
   emit('save', { id: props.product.id, ...product.value });
@@ -105,6 +114,7 @@ const submit = () => {
 
 const close = () => {
   product.value = {
+    product_code: '',
     name: '',
     price: null,
     description: '',

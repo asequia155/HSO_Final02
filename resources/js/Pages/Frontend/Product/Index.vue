@@ -186,7 +186,7 @@
 					</thead>
 					<tbody>
 						<tr v-for="item in paginatedProducts" :key="item.id" class="border-b border-neutral-200 transition hover:bg-neutral-100 cursor-pointer" @click="openModal('show', item)">
-							<td class="whitespace-nowrap px-6 py-3">#9ca3af{{ item.id }}</td>
+							<td class="whitespace-nowrap px-6 py-3">{{ item.product_code }}</td>
 							<td class="whitespace-nowrap px-6 py-3">{{ item.name }}</td>
 							<td class="whitespace-nowrap px-6 py-3">{{ categoryMap[item.category_id] || 'Uncategorized' }}</td>
 							<td class="whitespace-nowrap px-6 py-3"><a>₱ </a>{{ Number(item.price).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</td>
@@ -275,7 +275,7 @@
 		<AddStock :isOpen="addStock" :product="selectedProduct" :categories="categories" @close="closeModal" @save="updateProductQuantity" />
 		<ShowModal :isOpen="showModal" :category="categories" :product="selectedProduct" @close="closeModal" />
 		<EditModal :isOpen="editModal" :product="selectedProduct" :categories="categories" @close="closeModal" @save="updateProduct" />
-		<AddProductModal :isOpen="addModal" :categories="categories" @close="closeAddModal" @add="addProduct" />
+		<AddProductModal :isOpen="addModal" :categories="categories" :existingProductCodes="props.existingProductCodes" @close="closeAddModal" @add="addProduct" />
 		<AddCategoryModal :isOpen="isCategoryModalOpen" @add="addCategory" @close="closeAddCategoryModal" />
 		<DeleteConfirmationModal :isOpen="deleteModal" :productName="productNameToDelete" @close="closeDeleteModal" @confirm="confirmDeleteProduct" />
 	</DashboardLayout>
@@ -301,12 +301,15 @@
 		    categories: Array,
 			message: String,
 			message_type: String,
+			existingProductCodes: Array,
 		});
 
 		const message = ref(props.message || '');
 		const messageType = ref(props.message_type || 'info');
+		const existingProductCodes = ref(['CODE123', 'CODE456']);
 		console.log(props.message);   // Log message content
 		console.log(props.message_type); // Log message type
+		console.log(props.existingProductCodes);
 		onMounted(() => {
 	  	setTimeout(() => {
 	    message.value = ''; // Clear the message after 3 seconds
@@ -450,42 +453,44 @@
 		};
 
 		const updateProduct = (updatedProduct) => {
-		    console.log('Received Updated Product:', updatedProduct); // Check if id is present
-		    Inertia.put(route('products.update', updatedProduct.id), {
-		        name: updatedProduct.name,
-		        price: updatedProduct.price,
-		        description: updatedProduct.description,
-		        category_id: updatedProduct.category_id,
-		        quantity: updatedProduct.quantity
-		    }, {
-		        onSuccess: () => {
-		            console.log('Product updated successfully'); // Log success
-		            closeModal();
-		        },
-		        onError: (errors) => {
-		            console.error('Update failed:', errors); // Log errors
-		        }
-		    });
-		};
+    console.log('Received Updated Product:', updatedProduct); // Check if id is present
+    Inertia.put(route('products.update', updatedProduct.id), {
+        product_code: updatedProduct.product_code, // Include product_code
+        name: updatedProduct.name,
+        price: updatedProduct.price,
+        description: updatedProduct.description,
+        category_id: updatedProduct.category_id,
+        quantity: updatedProduct.quantity // Ensure this is included if needed
+    }, {
+        onSuccess: () => {
+            console.log('Product updated successfully'); // Log success
+            closeModal();
+        },
+        onError: (errors) => {
+            console.error('Update failed:', errors); // Log errors
+        }
+    });
+};
 
 		const addProduct = (product) => {
-		    console.log('Product data:', product); // Check what data is being passed
-		    Inertia.post(route('products.store'), {
-		        name: product.name,
-		        price: product.price,
-		        category_id: product.category_id, // Ensure this matches your modal's v-model
-		        description: product.description,
-		        quantity: product.quantity
-		    }, {
-		        onSuccess: () => {
-		            closeAddModal(); // Close the modal after a successful addition
-		            console.log('Product added successfully');
-		        },
-		        onError: (errors) => {
-		            console.error('Error adding product:', errors);
-		        }
-		    });
-		};
+    console.log('Product data:', product); // Check what data is being passed
+    Inertia.post(route('products.store'), {
+        product_code: product.product_code,
+        name: product.name,
+        price: product.price,
+        category_id: product.category_id,
+        description: product.description,
+        quantity: product.quantity // Ensure this is included
+    }, {
+        onSuccess: () => {
+            closeAddModal(); // Close the modal after a successful addition
+            console.log('Product added successfully');
+        },
+        onError: (errors) => {
+            console.error('Error adding product:', errors);
+        }
+    });
+};
 
 
 		//Delete script
