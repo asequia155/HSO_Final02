@@ -262,26 +262,44 @@
 });
 
 	// Generate a PDF report for total sales
-	const generateTotalSalesReport = () => {
+const generateTotalSalesReport = () => {
+    // Check if both start and end dates are provided
     if (!filters.value.startDate || !filters.value.endDate) {
         message.value = 'Please specify both start and end dates to generate the report!';
         messageType.value = 'error';
         return;
     }
 
+    // Get filtered transactions based on the date range
     const filteredData = filteredTransactions.value;
-    let totalSales = 0;
 
+    // Initialize totals
+    let totalSales = 0;
+    let totalTax = 0;
+    let totalDiscount = 0;
+
+    // Calculate total sales, total tax, and total discount from filtered transactions
     filteredData.forEach(transaction => {
-        totalSales += parseFloat(transaction.total);
+        totalSales += parseFloat(transaction.total) || 0; // Total sales
+        totalTax += parseFloat(transaction.tax) || 0; // Total tax
+        totalDiscount += parseFloat(transaction.discount_amount) || 0; // Total discount
     });
 
-    const doc = new jsPDF();
-    doc.text("Total Sales Report", 10, 10);
-    doc.text(`Date Range: ${filters.value.startDate || 'N/A'} to ${filters.value.endDate || 'N/A'}`, 10, 20);
-    doc.text(`Total Sales: ₱ ${totalSales.toFixed(2)}`, 10, 30);
+    // Prepare data for Excel
+    const headers = ['Description', 'Amount'];
+    const data = [
+        ['Total Sales', `₱ ${totalSales.toFixed(2)}`],
+        ['Total Tax', `₱ ${totalTax.toFixed(2)}`],
+        ['Total Discount', `₱ ${totalDiscount.toFixed(2)}`]
+    ];
 
-    doc.save("Total_Sales_Report.pdf");
+    // Create a worksheet and workbook
+    const worksheet = utils.aoa_to_sheet([headers, ...data]);
+    const workbook = utils.book_new();
+    utils.book_append_sheet(workbook, worksheet, 'Sales Summary');
+
+    // Save the Excel file
+    writeFile(workbook, 'Total_Sales_Summary.xlsx');
 };
 
 

@@ -92,18 +92,26 @@
 
         <div class="bg-white rounded-lg shadow-lg overflow-visible relative">
             <div class="flex items-center p-4 border-b border-neutral-200 justify-between w-full">
-                <form class="flex items-center">
-                    <label for="search" class="sr-only">Search</label>
-                    <div class="relative w-80">
-                        <input
-                            type="text"
-                            id="search"
-                            v-model="searchQuery"
-                            placeholder="Search notifications..."
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full pl-10 p-2"
-                        />
-                    </div>
-                </form>
+                <div class="flex items-center space-x-4">
+						<div class="flex items-center space-x-2">
+							<label for="startDate" class="text-sm font-medium text-gray-700">Start:</label>
+							<input
+								type="date"
+								id="startDate"
+								v-model="filters.startDate"
+								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
+							/>
+						</div>
+						<div class="flex items-center space-x-2">
+							<label for="endDate" class="text-sm font-medium text-gray-700">End:</label>
+							<input
+								type="date"
+								id="endDate"
+								v-model="filters.endDate"
+								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
+							/>
+						</div>
+					</div>
             </div>
 
             <div class="overflow-x-auto">
@@ -113,6 +121,7 @@
                 <table class="min-w-full text-left text-sm font-light text-gray-700">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-200">
                         <tr>
+                            <th scope="col" class="px-6 py-4">Date</th>
                             <th scope="col" class="px-6 py-4">ID</th>
                             <th scope="col" class="px-6 py-4">Title</th>
                             <th scope="col" class="px-6 py-4">Message</th>
@@ -122,6 +131,7 @@
                     </thead>
                     <tbody>
                         <tr v-for="notification in paginatedNotifications" :key="notification.id" class="border-b border-neutral-200 hover:bg-neutral-100">
+                            <td class="whitespace-nowrap px-6 py-3">{{ formatDate(notification.created_at) }}</td>
                             <td class="whitespace-nowrap px-6 py-3">#{{ notification.id }}</td>
                             <td class="whitespace-nowrap px-6 py-3">{{ notification.title }}</td>
                             <td class="whitespace-nowrap px-6 py-3">
@@ -181,11 +191,24 @@ const searchQuery = ref('');
 const currentPage = ref(1);
 const itemsPerPage = 5;
 
+const filters = ref({
+		startDate: '',
+		endDate: '',
+	});
+
 // Computed properties  
 const filteredNotifications = computed(() => {
-    return props.notifications.filter(notification => 
-        notification.title.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
+    if (!filters.value.startDate || !filters.value.endDate) {
+			return props.notifications; // Show all transactions if no date range is set
+		}
+
+		const start = new Date(filters.value.startDate).getTime();
+		const end = new Date(filters.value.endDate).getTime();
+
+		return props.notifications.filter((notification) => {
+			const notificationDate = new Date(notification.created_at).getTime();
+			return notificationDate >= start && notificationDate <= end;
+		});
 });
 
 const paginatedNotifications = computed(() => {
@@ -234,4 +257,10 @@ function deleteNotification(id) {
         }
     });
 }
+
+const formatDate = (date) => {
+		const options = { year: 'numeric', month: 'long', day: 'numeric' };
+		return new Date(date).toLocaleDateString(undefined, options);
+	};
+
 </script>

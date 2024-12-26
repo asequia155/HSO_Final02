@@ -30,6 +30,7 @@ class DashboardController extends Controller
             return Inertia::render('ClerkDashboard', [
                 'totalProducts' => Product::count(),
                 'todayTotalSales' => Transaction::whereDate('created_at', Carbon::today())->sum('total'),
+                'notifications' =>Notification::all(),
             ]);
         }
 
@@ -77,7 +78,7 @@ class DashboardController extends Controller
             'totalSales' => Transaction::sum('total'),
             'todayTotalSales' => Transaction::whereDate('created_at', Carbon::today())->sum('total'),
             'salesChartData' => $salesChart->toArray(),
-            'notifications' => Notification::where('is_read', false)->latest()->take(3)->get(),
+            'notifications' => Notification::where('is_read', true)->latest()->take(3)->get(),
 
         ])->with('debug', true);
     }
@@ -88,6 +89,7 @@ class DashboardController extends Controller
             'totalProducts' => Product::count(),
             'todayTotalSales' => Transaction::whereDate('created_at', Carbon::today())->sum('total'),
             'totalSales' => Transaction::sum('total'),
+            'notifications' => Notification::where('is_read', true)->latest()->take(3)->get(),
         ]);
     }
 }

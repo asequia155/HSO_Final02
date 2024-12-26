@@ -1,6 +1,6 @@
 <template>
     <DashboardLayout>
-        <DashboardHeader />
+        <DashboardHeader :notifications="notifications" />
         <DashboardCard
     :totalProducts="totalProducts"
     :todayTotalSales="todayTotalSales"
@@ -22,6 +22,12 @@ const props = defineProps({
     totalProducts: Number, // Number of products (specific to clerk view)
     todayTotalSales: [Number, String], // Today's total sales
     totalSales: [Number, String],
+    notifications: {
+    type: Array,
+    required: true,
+  },
 
 });
+
+console.log("Received notifications:", props.notifications);
 </script>
