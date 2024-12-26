@@ -66,16 +66,21 @@
           <!-- Phone -->
           <div>
             <label for="phone" class="block mb-2 text-sm font-medium text-gray-900">Phone</label>
-            <input
-              v-model="phone"
-              id="phone"
-              type="tel"
-              class="border w-full p-2 rounded"
-              placeholder="Enter phone number"
-            />
+            <div class="flex items-center">
+              <span class="border p-2 rounded-l bg-gray-200">+63</span>
+              <input
+                v-model="phone"
+                id="phone"
+                type="text"
+                class="border w-full p-2 rounded-r"
+                placeholder="Enter phone number"
+                maxlength="10"
+                @input="phone = phone.replace(/[^\d]/g, '').slice(0, 10)"
+              />
+            </div>
             <p v-if="errors.phone" class="text-red-500 text-sm mt-1">{{ errors.phone }}</p>
           </div>
-
+          
           <!-- Date of Birth -->
           <div>
             <label for="date_of_birth" class="block mb-2 text-sm font-medium text-gray-900">Date of Birth</label>

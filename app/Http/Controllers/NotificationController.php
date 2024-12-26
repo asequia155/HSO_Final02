@@ -1,53 +1,35 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Notification;
 use Inertia\Inertia;
-use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
-    /**
-     * Display the latest notifications.
-     */
     public function index()
     {
-        // Fetch the latest 3 notifications
-        $notifications = Notification::latest()->take(3)->get();
-
-        // Return the notifications as a response (or pass to Inertia)
-        return Inertia::render('Frontend/Notification/Index', [         
+        $notifications = Notification::all();
+        // $notifications = Notification::orderBy('created_at', 'desc')->paginate(10);
+    
+        return Inertia::render('Frontend/Notification/Index', [
+            'notifications' => $notifications,
         ]);
     }
 
-    /**
-     * Mark a notification as read.
-     */
-    public function markAsRead(Notification $notification)
+    public function markAsRead($id)
     {
-        $notification->update(['is_read' => true]);
+        $notification = Notification::findOrFail($id);
+        $notification->is_read = true;
+        $notification->save();
 
-        return response()->json(['message' => 'Notification marked as read']);
+        return redirect()->back()->with('success', 'Notification marked as read.');
     }
 
-    /**
-     * Mark all notifications as read.
-     */
-    public function markAllAsRead()
+    public function delete($id)
     {
-        Notification::where('is_read', false)->update(['is_read' => true]);
-
-        return response()->json(['message' => 'All notifications marked as read']);
-    }
-
-    /**
-     * Delete a notification.
-     */
-    public function destroy(Notification $notification)
-    {
+        $notification = Notification::findOrFail($id);
         $notification->delete();
 
-        return response()->json(['message' => 'Notification deleted']);
+        return response()->json(['message' => 'Notification deleted.']);
     }
 }

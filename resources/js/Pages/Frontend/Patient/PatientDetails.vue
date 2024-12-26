@@ -114,6 +114,7 @@
 					</button>
 				</div>
 			</div>
+			<!-- Patient Details -->
 			<hr class="border-t border-gray-300 w-full" />
 			<div v-if="patient" class="px-4 py-4">
 				<div class="mb-2">
@@ -126,7 +127,7 @@
 					<p><strong>Email:</strong> <span class="text-gray-700">{{ patient.email }}</span></p>
 				</div>
 				<div class="mb-2">
-					<p><strong>Email:</strong> <span class="text-gray-700">{{ patient.phone }}</span></p>
+					<p><strong>Phone:</strong> <span class="text-gray-700">+63 {{ patient.phone }}</span></p>
 				</div>
 				<div class="mb-2">
 					<p><strong>Occupation:</strong> <span class="text-gray-700">{{ patient.occupation }}</span></p>

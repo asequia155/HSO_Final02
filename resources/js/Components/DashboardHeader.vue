@@ -10,26 +10,43 @@
         </div>
 
         <div class="flex items-center space-x-3">
-            <div class="mt-2" style="margin-right: -10px;">
-    <button @click="toggleDropdown">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405C18.317 14.74 18 13.38 18 12V9c0-3.866-3.134-7-7-7S4 5.134 4 9v3c0 1.38-.317 2.74-.595 3.595L2 17h5m8 0a3 3 0 01-6 0m6 0H9" />
-      </svg>
-    </button>
-    <div v-if="dropdownOpen">
-      <ul>
-        <li v-for="notification in notifications" :key="notification.id">
-          <div>
-            <h4>{{ notification.title }}</h4>
-            <p>{{ notification.message }}</p>
-            <button @click="markAsRead(notification.id)">Mark as Read</button>
-            <button @click="deleteNotification(notification.id)">Delete</button>
-          </div>
-        </li>
-      </ul>
-      <div v-if="notifications.length === 0">No new notifications</div>
+            <div class="mt-2 relative">
+        <!-- Notification Icon -->
+        <button @click.prevent="toggleNotifDropdown">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M15 17h5l-1.405-1.405C18.317 14.74 18 13.38 18 12V9c0-3.866-3.134-7-7-7S4 5.134 4 9v3c0 1.38-.317 2.74-.595 3.595L2 17h5m8 0a3 3 0 01-6 0m6 0H9"
+                />
+            </svg>
+        </button>
+
+        <!-- Notification Dropdown -->
+        <div v-if="dropdownOpen" class="absolute bg-white shadow-lg rounded-lg mt-2 w-72 z-10">
+            <ul>
+                <!-- FIX: Correct key and property bindings -->
+                <li v-for="notification in notifications" :key="notification.id" class="border-b p-4">
+                    <div>
+                        <h4 class="font-semibold">{{ notification.title }}</h4>
+                        <p class="text-sm text-gray-600">{{ notification.message }}</p>
+                    </div>
+                </li>
+                <li>
+                    <Link :href="route('notifications.index')">
+
+                    <div v-if="notifications.length !== 0"  class="p-2 text-center text-gray-500">
+                        Show all notifications
+                    </div> 
+                </Link>
+                </li> 
+            </ul>
+            <!-- FIX: Check notifications array directly -->
+            <div v-if="notifications.length === 0" class="p-4 text-center text-gray-500">
+                No new notifications
+            </div>
+        </div>
     </div>
-  </div>
 
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 <div class="ml-3 relative">
@@ -73,46 +90,23 @@
 <script setup>
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
+import { ref } from 'vue';
+import { Link, usePage } from "@inertiajs/inertia-vue3";
 
-// import { ref, watch } from "vue";
-// import { Inertia } from "@inertiajs/inertia";
+const props = defineProps({
+  notifications: {
+    type: Array,
+    default: () => [], // Default to an empty array
+  },
+});
 
-// // Props passed from Laravel via Inertia
-// defineProps({
-//   initialNotifications: Array, // Prop for the initial list of notifications
-// });
+// State for dropdown visibility and notifications list
+const dropdownOpen = ref(false);
 
-// const notifications = ref([...initialNotifications]); // Reactive list of notifications
-// const dropdownOpen = ref(false);
+// Toggle the dropdown visibility
+const toggleNotifDropdown = () => {
+  dropdownOpen.value = !dropdownOpen.value;
+};
 
-// // Toggle dropdown visibility
-// const toggleDropdown = () => {
-//   dropdownOpen.value = !dropdownOpen.value;
-//   if (dropdownOpen.value) {
-//     fetchNotifications();
-//   }
-// };
-
-// // Fetch updated notifications (if needed)
-// const fetchNotifications = () => {
-//   Inertia.get("/notifications", {}, { preserveState: true }).then(({ props }) => {
-//     notifications.value = props.notifications;
-//   });
-// };
-
-// // Mark a single notification as read
-// const markAsRead = (id) => {
-//   Inertia.post(`/notifications/${id}/read`, {}, { preserveState: true }).then(() => {
-//     // Update notifications locally after marking as read
-//     notifications.value = notifications.value.filter((n) => n.id !== id);
-//   });
-// };
-
-// // Delete a notification
-// const deleteNotification = (id) => {
-//   Inertia.delete(`/notifications/${id}`, { preserveState: true }).then(() => {
-//     // Update notifications locally after deletion
-//     notifications.value = notifications.value.filter((n) => n.id !== id);
-//   });
-// };
+console.log("Notifications in child:", props.notifications);
 </script>

@@ -58,9 +58,8 @@ Route::put('/patients/{patientId}/prescriptions/{prescriptionId}', [Prescription
 
 
 Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
-Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
-Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
-Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+Route::delete('/notifications/{id}', [NotificationController::class, 'delete']);
 
 Route::resource('pos', POSController::class);
 Route::resource('categories', CategoryController::class);

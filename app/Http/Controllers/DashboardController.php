@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Patient;
 use App\Models\Product;
+use App\Models\Notification;
 use Inertia\Inertia;
 use App\Models\Transaction;
 use Carbon\Carbon;
@@ -23,6 +24,7 @@ class DashboardController extends Controller
                 'totalSales' => Transaction::sum('total'),
                 'todayTotalSales' => Transaction::whereDate('created_at', Carbon::today())->sum('total'),
                 'salesChartData' => Transaction::select('total', 'created_at')->get(),
+                'notifications' =>Notification::all(),
             ]);
         } elseif ($user->hasRole('clerk')) {
             return Inertia::render('ClerkDashboard', [
@@ -32,23 +34,23 @@ class DashboardController extends Controller
         }
 
         // Full rawboard logic for other use cases
-        $patients = Patient::all();
-        $products = Product::all();
-        $totalPatients = Patient::count();
-        $totalProducts = Product::count();
-        $totalSales = Transaction::sum('total');
-        $todayTotalSales = Transaction::whereDate('created_at', Carbon::today())->sum('total');
-        $salesChart = Transaction::select('total', 'created_at')->get();
+        // $patients = Patient::all();
+        // $products = Product::all();
+        // $totalPatients = Patient::count();
+        // $totalProducts = Product::count();
+        // $totalSales = Transaction::sum('total');
+        // $todayTotalSales = Transaction::whereDate('created_at', Carbon::today())->sum('total');
+        // $salesChart = Transaction::select('total', 'created_at')->get();
 
-        return Inertia::render('rawboard', [
-            'patients' => $patients,
-            'products' => $products,
-            'totalPatients' => $totalPatients,
-            'totalProducts' => $totalProducts,
-            'totalSales' => $totalSales,
-            'todayTotalSales' => $todayTotalSales,
-            'salesChart' => $salesChart,
-        ]);
+        // return Inertia::render('rawboard', [
+        //     'patients' => $patients,
+        //     'products' => $products,
+        //     'totalPatients' => $totalPatients,
+        //     'totalProducts' => $totalProducts,
+        //     'totalSales' => $totalSales,
+        //     'todayTotalSales' => $todayTotalSales,
+        //     'salesChart' => $salesChart,
+        // ]);
     }
 
     public function adminDashboard()
@@ -75,6 +77,8 @@ class DashboardController extends Controller
             'totalSales' => Transaction::sum('total'),
             'todayTotalSales' => Transaction::whereDate('created_at', Carbon::today())->sum('total'),
             'salesChartData' => $salesChart->toArray(),
+            'notifications' => Notification::where('is_read', false)->latest()->take(3)->get(),
+
         ])->with('debug', true);
     }
 

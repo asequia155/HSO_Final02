@@ -240,7 +240,7 @@
 							<td class="px-6 py-3 whitespace-nowrap">{{ item.last_name }}</td>
 							<td class="px-6 py-3 whitespace-nowrap">{{ item.gender ? item.gender : 'not set' }}</td>
 							<td class="px-6 py-3 whitespace-nowrap">{{ item.email }}</td>
-							<td class="px-6 py-3 whitespace-nowrap">{{ item.phone }}</td>
+							<td class="px-6 py-3 whitespace-nowrap">+63 {{ item.phone }}</td>
 							<td class="px-6 py-3 whitespace-nowrap">{{ item.occupation }}</td>
 							<td class="px-6 py-3 whitespace-nowrap">{{ item.age }}</td>
 							<td class="px-6 py-3 whitespace-nowrap">
