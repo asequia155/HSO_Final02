@@ -1,19 +1,19 @@
 <template>
-  <div v-if="isOpen" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-lg max-w-2xl w-full relative">
-      
+  <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
+    <div class="relative w-full max-w-2xl bg-white rounded-lg shadow-lg">
+
       <!-- Header Section -->
-      <div class="bg-red-600 text-white p-4 rounded-t-lg">
+      <div class="p-4 text-white bg-red-600 rounded-t-lg">
         <h2 class="text-xl font-semibold">Patient Details</h2>
       </div>
 
       <!-- Close Button -->
-      <button @click="close" class="absolute top-2 right-2 text-white hover:text-gray-800 transition duration-200 text-2xl p-2">
+      <button @click="close" class="absolute p-2 text-2xl text-white transition duration-200 top-2 right-2 hover:text-gray-800">
         &times;
       </button>
 
       <!-- Content Section -->
-      <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 gap-6 p-6 md:grid-cols-2">
         <!-- Patient Details Section -->
         <div>
           <div v-if="patients">
@@ -64,7 +64,7 @@
       <div class="flex justify-end pr-6 mb-6">
         <button
           @click="close"
-          class="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400 transition"
+          class="px-4 py-2 text-black transition bg-gray-300 rounded hover:bg-gray-400"
         >
           Close
         </button>

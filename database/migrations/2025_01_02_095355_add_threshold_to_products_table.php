@@ -10,16 +10,20 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up()
+{
+    Schema::table('products', function (Blueprint $table) {
+        $table->integer('threshold')->default(10); // Default threshold for low stock
+    });
+}
+
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->string('product_code')->unique()->change();
-        });
-    }
-    
-    public function down()
-    {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('product_code'); // Remove product_code column
+            //
         });
     }
 };

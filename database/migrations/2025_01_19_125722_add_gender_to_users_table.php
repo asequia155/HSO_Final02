@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class DropNameColumnFromPatientsTable extends Migration
+class AddGenderToUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class DropNameColumnFromPatientsTable extends Migration
      */
     public function up()
     {
-        Schema::table('patients', function (Blueprint $table) {
-            $table->dropColumn('name');
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('gender')->nullable()->after('email'); // Add the gender column after the email column
         });
     }
 
@@ -25,8 +25,8 @@ class DropNameColumnFromPatientsTable extends Migration
      */
     public function down()
     {
-        Schema::table('patients', function (Blueprint $table) {
-            $table->string('name');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('gender'); // Remove the gender column
         });
     }
 }

@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Hash;
 
 class RoleSeeder extends Seeder
 {
@@ -58,11 +60,11 @@ class RoleSeeder extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::firstOrCreate(['name' => $permission]);
         }
 
         // Create roles and assign permissions
-        $clerkRole = Role::create(['name' => 'clerk']);
+        $clerkRole = Role::updateOrCreate(['id' => 1], ['name' => 'clerk']);
         $clerkRole->givePermissionTo([
             'view dashboard',
             'create transactions',
@@ -72,7 +74,37 @@ class RoleSeeder extends Seeder
             'view prescriptions',
         ]);
 
-        $adminRole = Role::create(['name' => 'admin']);
+        $adminRole = Role::updateOrCreate(['id' => 2], ['name' => 'admin']);
         $adminRole->givePermissionTo(Permission::all());
+
+
+        $patientRole = Role::updateOrCreate(['id' => 3], ['name' => 'patient']);
+        $patientRole->givePermissionTo([
+            'view dashboard'
+        ]);
+
+        // Create admin user and assign admin role
+        $adminUser = User::firstOrCreate(
+            ['email' => 'admin@gmail.com'],
+            [
+                'name' => 'Admin User',
+                'password' => Hash::make('12345678'),
+            ]
+        );
+        $adminUser->role_id = 2;
+        $adminUser->save();
+        $adminUser->assignRole($adminRole);
+
+        // Create clerk user and assign clerk role
+        $clerkUser = User::firstOrCreate(
+            ['email' => 'clerk@gmail.com'],
+            [
+                'name' => 'Clerk User',
+                'password' => Hash::make('12345678'),
+            ]
+        );
+        $clerkUser->role_id = 1;
+        $clerkUser->save();
+        $clerkUser->assignRole($clerkRole);
     }
 }

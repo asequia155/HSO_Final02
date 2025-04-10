@@ -1,33 +1,64 @@
 <template>
     <DashboardLayout>
-        <DashboardHeader :notifications="notifications" />
-        <DashboardCard
-    :totalProducts="totalProducts"
-    :todayTotalSales="todayTotalSales"
-    :totalSales="totalSales"
+      <!-- Dashboard Header -->
+      <DashboardHeader :notifications="notifications" />
 
-    userRole="clerk"
-/>
+      <!-- Dashboard Card Component -->
+      <DashboardCard
+        :totalPatients="totalPatients"
+        :totalProducts="totalProducts"
+        :totalSales="totalSales"
+        :todayTotalSales="todayTotalSales"
+        :todayTotalAppointments="todayTotalAppointments"
+        userRole="clerk"
+      />
+
+      <!-- Wrapper for Sales Chart and Today's Reservation -->
+      <div class="flex justify-between">
+        <!-- Sales Chart Component -->
+        <div class="w-1/2 ">
+          <SalesChart :data="salesChartData" />
+        </div>
+
+        <!-- Today's Reservation Component -->
+        <div class="w-1/2 ">
+          <TodaysReservation :TodaysReservationList="TodaysReservationList" />
+        </div>
+      </div>
 
     </DashboardLayout>
-</template>
+  </template>
 
-<script setup>
-import DashboardLayout from '@/Layouts/DashboardLayout.vue';
-import DashboardHeader from '@/Components/DashboardHeader.vue';
-import DashboardCard from '@/Components/DashboardCard.vue';
+  <script setup>
+  import DashboardLayout from "@/Layouts/DashboardLayout.vue";
+  import DashboardHeader from "@/Components/DashboardHeader.vue";
+  import DashboardCard from "@/Components/DashboardCard.vue";
+  import SalesChart from "@/Components/Chart/SalesChart.vue";
+  import TodaysReservation from "@/Components/TodaysReservation.vue";
 
-// Define props for the limited features available to the clerk
-const props = defineProps({
-    totalProducts: Number, // Number of products (specific to clerk view)
-    todayTotalSales: [Number, String], // Today's total sales
+  const props = defineProps({
+    totalPatients: Number,
+    totalProducts: Number,
     totalSales: [Number, String],
+    todayTotalSales: [Number, String],
+    salesChartData: {
+      type: Array,
+      required: true,
+    },
     notifications: {
-    type: Array,
-    required: true,
-  },
+      type: Array,
+      required: true,
+    },
+    todayTotalAppointments: Number,
+    TodaysReservationList: Array,
+  });
 
-});
+  // Debugging
+  console.log("Props salesChartData received in ClerkDashboard:", props.salesChartData);
+  console.log("Received notifications:", props.notifications);
+  console.log("NUMBER APPOINTMENT:", props.todayTotalAppointments);
 
-console.log("Received notifications:", props.notifications);
-</script>
+  </script>
+
+  <style scoped>
+  </style>

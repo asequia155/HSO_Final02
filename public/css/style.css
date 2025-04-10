@@ -1,12 +1,12 @@
-/*------------------------------------------------------------- 
+/*-------------------------------------------------------------
     HSO: PRODUCTS -- ^^
 --------------------------------------------------------*/
 
 /* 1. IMPORT FILES */
-@import url('https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i');
+@import url("https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i");
 
-/*------------------------------------------------------------- 
-    2. BASE CSS 
+/*-------------------------------------------------------------
+    2. BASE CSS
 -------------------------------------------------------------*/
 body {
     display: flex;
@@ -14,23 +14,31 @@ body {
     min-height: 100vh;
     margin: 0px;
     padding: 0px;
-    font-family: 'Raleway', sans-serif;
+    font-family: "Raleway", sans-serif;
     font-weight: 400;
     overflow-x: hidden;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     margin: 0;
     padding: 0;
 }
 
-ul, ol {
+ul,
+ol {
     list-style: none;
     margin: 0px;
     padding: 0px;
 }
 
-a, a:hover, a:focus {
+a,
+a:hover,
+a:focus {
     text-decoration: none;
     transition: ease all 0.5s;
 }
@@ -41,12 +49,14 @@ img {
 }
 
 .row {
-    display: flex; 
+    display: flex;
     flex-wrap: wrap;
-    justify-content: center; 
+    justify-content: center;
 }
 
-.col-lg-3, .col-sm-6, .col-md-3 {
+.col-lg-3,
+.col-sm-6,
+.col-md-3 {
     flex: 0 0 calc(25% - 20px);
     box-sizing: border-box;
     text-align: center;
@@ -72,14 +82,15 @@ img {
     object-fit: contain;
 }
 
-input, textarea {
+input,
+textarea {
     outline: none;
     border: none;
     resize: none;
 }
 
-/*------------------------------------------------------------- 
-    2. HEADER 
+/*-------------------------------------------------------------
+    2. HEADER
 -------------------------------------------------------------*/
 
 .container {
@@ -105,7 +116,7 @@ input, textarea {
     text-align: center;
     color: #ffffff;
     font-size: 15px;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     font-weight: 600;
 }
 
@@ -123,46 +134,39 @@ input, textarea {
 
 /* BUTTON HOME */
 /* Home Button Icon */
+
 .home-icon {
     position: fixed; /* Fixed position to stay on the screen while scrolling */
-    bottom: 20px; /* Distance from the bottom */
-    right: 20px; /* Distance from the right */
+    top: 80px; /* Distance from the bottom */
+    right: 50px; /* Distance from the right */
     z-index: 1000; /* Ensure it stays above other elements */
-    width: 50px; /* Slightly smaller width */
-    height: 50px; /* Slightly smaller height */
-    background-color: #ffffffb5; /* Red background for visibility */
-    color: #ffffff; /* White color for icon */
-    padding: 8px;
-    border-radius: 50%; /* Circular shape */
+    width: auto; /* Automatically adjust width based on text */
+    height: 40px; /* Adjust height to make it oval */
+    background-color: #ffffffb5; /* Background for visibility */
+    color: black; /* Text color */
+    padding: 0 16px; /* Horizontal padding for oval shape */
+    border-radius: 20px; /* Oval shape */
     box-shadow: 0 4px 6px rgba(255, 0, 0, 0.2); /* Optional shadow for style */
     display: flex;
     justify-content: center;
     align-items: center;
     transition: transform 0.3s ease, background-color 0.3s ease;
-}
-
-.home-icon img {
-    width: 100%; /* Scale the image to fit the button */
-    height: 100%;
-    border-radius: 50%; /* Ensure the image is circular */
-    object-fit: cover; /* Maintain proportions of the image */
+    font-size: 14px; /* Adjust font size */
 }
 
 .home-icon:hover {
-    background-color: red; /* Darker red on hover */
+    background-color: red; /* Change background color on hover */
     transform: scale(1.1); /* Slightly enlarge on hover */
     cursor: pointer; /* Pointer cursor on hover */
 }
-
-
 
 /* TAMAN DIRI */
 
 /* Main Product Section */
 .main-product {
     position: relative;
-    background: rgb(223, 208, 208); 
-    background-size: 200% 200%; 
+    background: rgb(223, 208, 208);
+    background-size: 200% 200%;
     min-height: 100vh; /* Adjusted height for responsiveness */
     display: flex;
     flex-direction: column;
@@ -179,7 +183,7 @@ input, textarea {
 }
 
 .find-box h1 {
-    font-family: 'Poppin';
+    font-family: "Poppin";
     font-weight: 500;
     color: red;
     font-size: 48px;
@@ -188,7 +192,7 @@ input, textarea {
 }
 
 .find-box h4 {
-    font-family: 'Times New Roman', sans-serif;
+    font-family: "Times New Roman", sans-serif;
     font-weight: 300;
     color: black;
     font-size: 20px;
@@ -235,9 +239,8 @@ input, textarea {
     background: #e7303085;
 }
 
-
-/*------------------------------------------------------------- 
-    7. FOOTER 
+/*-------------------------------------------------------------
+    7. FOOTER
 -------------------------------------------------------------*/
 
 .copyright {
@@ -273,7 +276,7 @@ input, textarea {
     text-decoration: underline;
 }
 
-/*------------------------------------------------------------- 
+/*-------------------------------------------------------------
     8. RESPONSIVE DESIGN (MOBILE VIEW)
 -------------------------------------------------------------*/
 
@@ -339,7 +342,7 @@ input, textarea {
     }
 
     .copyright {
-        flex-direction: column; 
+        flex-direction: column;
         padding: 15px; /* Reduce padding */
     }
 

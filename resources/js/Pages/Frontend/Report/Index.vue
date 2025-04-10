@@ -100,7 +100,7 @@
 						<thead class="text-xs text-gray-700 uppercase bg-gray-200 text-left">
 							<tr>
 								<th scope="col" class="px-6 py-4">Name</th>
-								<th scope="col" class="px-6 py-4">Category</th> 
+								<th scope="col" class="px-6 py-4">Category</th>
 								<th scope="col" class="px-6 py-4">Price</th>
 								<th scope="col" class="px-6 py-4">Description</th>
 								<th scope="col" class="px-6 py-4">Quantity</th>

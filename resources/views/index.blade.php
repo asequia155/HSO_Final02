@@ -34,17 +34,47 @@
 </head>
 
 <body id="home">
+    @if(!empty($message))
+    <div id="success-modal" class="modal">
+        <svg width="50" height="50" viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="50" r="40" fill="#4CAF50" />
+            <path d="M30 50L45 65L70 35" stroke="white" stroke-width="5" />
+        </svg>
+        <h2>Success!</h2>
+        <p> {{ $message }} </p>
+        <button id="close-modal-button">Ok</button>
+    </div>
+    @endif
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('success-modal');
+            const closeButton = document.getElementById('close-modal-button');
+
+            // Close modal on button click
+            closeButton.addEventListener('click', () => {
+                modal.style.display = 'none'; // Hide the modal
+            });
+
+            // Close modal after 3 seconds
+            setTimeout(() => {
+                if (modal) {
+                    modal.style.display = 'none'; // Hide the modal
+                }
+            }, 3000);
+        });
+    </script>
 
     <div class="topbar">
         <div class="container">
-            <h3>(MON - FRI 9:00 AM to 6:00 PM) Aguinaldo Street, Iligan City</h3>
+            <h3>(MON - FRI 8:00 AM to 5:00 PM) Aguinaldo Street, Iligan City</h3>
         </div>
     </div>
     <!--topbar-->
 
     <header>
         <div class="container">
-            <a href="index.html" class="logo"><img src="{{ asset('images/logo.png') }}" alt="" /></a>
+            <a href="/" class="logo"><img src="{{ asset('images/logo.png') }}" alt="" /></a>
 
             <div class="menuicons" style="display:none;">
                 <a href="javascript:void();" class="shownav">
@@ -67,6 +97,7 @@
             </nav>
         </div>
     </header>
+
     <!--header-->
 
     <div class="banner">
@@ -106,20 +137,28 @@
                     <h4>
                         For inquiries, please complete the form below and share your details with us.
                     </h4>
-                    <form id="contactform" method="post" action="{{ asset('contactform/contactform.php') }}">
-                        <label>
-                            <input type="text" name="name" placeholder="Name*" required>
-                        </label>
-                        <label class="alignright">
-                            <input type="text" name="email" placeholder="Email*" required>
-                        </label>
-                        <label class="full">
-                            <input type="text" name="phone" placeholder="Phone*" required>
-                        </label>
-                        <label class="full">
-                            <input type="date" name="date" placeholder="Select Date" id="datepicker" class="" required>
-                        </label>
-                        <button type="submit" name="submit" id="contactform_btn">Submit Request</button>
+                    <h4>
+                        <a href="{{ route('ReservationForm') }}"
+                           style="
+                              display: inline-block;
+                              padding: 12px 24px;
+                              font-size: 16px;
+                              font-weight: bold;
+                              text-decoration: none;
+                              color: rgb(0, 0, 0);
+                              background: linear-gradient(to right, #ffffff, #ffffff);
+                              border-radius: 50px;
+                              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                              transition: all 0.3s ease;
+                              text-align: center;
+                           "
+                           onmouseover="this.style.background='linear-gradient(to right, #ff4d4d, #e60000)'; this.style.color='white'; this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 8px rgba(0, 0, 0, 0.2)';"
+                           onmouseout="this.style.background='linear-gradient(to right, #ffffff, #ffffff)'; this.style.color='rgb(0, 0, 0)'; this.style.transform='scale(1)'; this.style.boxShadow='0 4px 6px rgba(0, 0, 0, 0.1)';"
+                        >
+                            Book an Appointment
+                        </a>
+                    </h4>
+                      </div>
                         <div class="responsetype"></div>
                     </form>
                 </div>
@@ -191,7 +230,101 @@
     </div>
     <!--dental_services-->
 
-    <!-- The rest of the code -->
+    <div class="about" id="about">
+		<div class="container">
+
+			<div class="imagearea">
+				<img src="images/doctor2.jpg" alt="" />
+			</div>
+			<div class="text">
+				<h4>Meet</h4>
+				<h3>Dr. Dializa Remedios</h3>
+				<h5>Licensed Optometrist and Vision Care Expert</h5>
+				<p>
+					Experience the perfect blend of style and vision at Hollywood Spectacle Optical. From expert eye care to trendy eyewear, we bring clarity and sophistication together, putting the spotlight on your eyes.	</p>
+				<p>
+					Our clinic features cutting-edge vision care, offering tailored eye exams, high-quality lenses, and an extensive selection of stylish, designer frames to match every personality. We are dedicated to combining health, fashion, and innovation, ensuring you leave with both exceptional vision and a standout look.	</p>
+					<!--https://wa.me/11234567890-->
+				<a href="#" class="whatsapp">
+					<span class="fa-brands fa-whatsapp"></span> +639 127 7747 297
+				</a>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="stats">
+		<div class="container">
+
+		</div>
+	</div>
+
+    <div class="reviews" id="employees">
+        <div class="container">
+            <h2>Employees</h2>
+            <h3>Dedicated to Protecting and Improving Your Vision</h3>
+            <div class="reviewslider_wrap">
+                <div class="owl-carousel owl-theme reviewslider">
+                    <div class="employee-card">
+                        <img src="images/op.png" alt="Person 1" class="employee-image" />
+                        <h4 class="employee-name">James Ramayan</h4>
+                        <p class="employee-position">Assistant</p>
+                    </div>
+                    <div class="employee-card">
+                        <img src="images/to.png" alt="Person 2" class="employee-image" />
+                        <h4 class="employee-name">Cybelle Saavedra</h4>
+                        <p class="employee-position">Assistant</p>
+                    </div>
+                    <div class="employee-card">
+                        <img src="images/me.png" alt="Person 3" class="employee-image" />
+                        <h4 class="employee-name">Miko Asequia</h4>
+                        <p class="employee-position">Optician</p>
+                    </div>
+                </div>
+            </div>
+            <div class="contact" id="contact">
+                <div class="container">
+                    <div class="contactinfo">
+                        <h2>Get in Touch</h2>
+                        <h3>We’re here to help with your eye health and vision needs.</h3>
+                        <div class="infowrap">
+                            <!-- Phone Info -->
+                            <div class="info">
+                                <div class="icon-circle">
+                                    <i class="fa-solid fa-phone-volume"></i>
+                                </div>
+                                <h4>Call Us:</h4>
+                                <p>
+                                    <a href="tel:+639 127 7747 297">(+63) 9127 774 7297</a>
+                                </p>
+                            </div>
+                            <!-- Email Info -->
+                            <div class="info">
+                                <div class="icon-circle">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </div>
+                                <h4>Email Us:</h4>
+                                <p>
+                                    <a>bbremediosod@gmail.com</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--  The Map Below -->
+    <div class="map-container">
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d313.38373303456416!2d124.2395338!3d8.2279423!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x325575e04c584ccf%3A0xffe9511ef29ba946!2sHOLLYWOOD%20SPECTACLES%20OPTICAL!5e0!3m2!1sen!2sph!4v1698292956521!5m2!1sen!2sph"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+
 
     <footer>
         <div class="row align-items-center justify-content-center">
@@ -201,6 +334,13 @@
                     <p>All Rights Reserved. Hollywood Spectacles Optical © 2024</p>
                 </div>
             </div>
+
+            <!--   Social MEDIAS
+			<div class="socialmedia">
+				<a href="#"><span class="fa-brands fa-twitter"></span></a>
+				<a href="#"><span class="fa-brands fa-youtube"></span></a>
+			</div>
+		-->
         </div>
     </footer>
 
@@ -215,3 +355,46 @@
     <script src="{{ asset('js/jquery.counterup.js') }}"></script>
 </body>
 </html>
+<style>
+    .modal {
+  background-color: white;
+  padding-right: 30px;
+  padding-left: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: fixed; /* Position the modal relative to the viewport */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the modal */
+  z-index: 100; /* Ensure the modal is on top of other elements */
+}
+.modal-open {
+  /* Style for when the modal is open */
+  opacity: 0.5;
+}
+    .modal h2 {
+        color: #333;
+        margin-bottom: 0px;
+    }
+
+    .modal p {
+        color: #666;
+    }
+
+    .modal button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    .modal button:hover {
+        background-color: #45a049;
+    }
+</style>

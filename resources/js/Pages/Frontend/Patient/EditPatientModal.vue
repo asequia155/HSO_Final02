@@ -19,7 +19,7 @@
               v-model="first_name"
               id="first_name"
               type="text"
-              class="border w-full p-2 rounded"
+              class="border w-full p-2 rounded capitalize"
               placeholder="Enter first name"
             />
             <p v-if="errors.first_name" class="text-red-500 text-sm mt-1">{{ errors.first_name }}</p>
@@ -32,7 +32,7 @@
               v-model="last_name"
               id="last_name"
               type="text"
-              class="border w-full p-2 rounded"
+              class="border w-full p-2 rounded capitalize"
               placeholder="Enter last name"
             />
             <p v-if="errors.last_name" class="text-red-500 text-sm mt-1">{{ errors.last_name }}</p>
@@ -99,7 +99,7 @@
             <input
               v-model="address"
               id="address"
-              class="border w-full p-2 rounded"
+              class="border w-full p-2 rounded capitalize"
               placeholder="Enter address"
             />
             <p v-if="errors.address" class="text-red-500 text-sm mt-1">{{ errors.address }}</p>
@@ -111,10 +111,9 @@
             <input
               v-model="occupation"
               id="occupation"
-              class="border w-full p-2 rounded"
+              class="border w-full p-2 rounded capitalize"
               placeholder="Enter occupation"
             />
-            <p v-if="errors.occupation" class="text-red-500 text-sm mt-1">{{ errors.occupation }}</p>
           </div>
         </div>
 
@@ -163,7 +162,6 @@ const errors = ref({
   phone: '',
   date_of_birth: '',
   address: '',
-  occupation: '',
 });
 
 // Watch for changes in patientData to prefill form
@@ -217,11 +215,6 @@ const validate = () => {
     errors.value.address = 'Address is required.';
     isValid = false;
   }
-  if (!occupation.value) {
-    errors.value.occupation = 'Occupation is required.';
-    isValid = false;
-  }
-
   return isValid;
 };
 

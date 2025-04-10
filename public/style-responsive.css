@@ -422,3 +422,6 @@
 
 }
 
+.alert-banner {
+    z-index: 50;
+}

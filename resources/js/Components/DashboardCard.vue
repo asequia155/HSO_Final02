@@ -1,5 +1,5 @@
 <template>
-      <div class="container max-w-6xl mx-auto">
+      <div class="container">
         <div class="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
 
           <!-- Total Sales Section -->
@@ -58,7 +58,29 @@
               </svg>
             </div>
           </div>
-
+          <!-- Total Appointments Section -->
+          <div
+            v-if="userRole ===  'clerk'"
+            class="flex items-center justify-between p-5 bg-white rounded-lg shadow-md"
+          >
+            <div>
+              <div class="text-sm text-black">Today's Appointments</div>
+              <div class="flex items-center pt-1">
+                <div v-if="todayTotalAppointments !== undefined" class="text-xl font-medium text-red-500">{{ todayTotalAppointments }}</div>
+                <p v-else>Loading...</p>
+              </div>
+            </div>
+            <div class="text-gray-300">
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="black">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 3v16c0 .552.448 1 1 1h12c.552 0 1-.448 1-1V3c0-.552-.448-1-1-1H6c-.552 0-1 .448-1 1zm0 4h14m-7 8v4m-2-8v-4h2m2 4v-4h2m-4 8h4"
+        />
+      </svg>
+            </div>
+          </div>
           <!-- MRR Section -->
           <div
             v-if="userRole === 'admin' || userRole === 'clerk'"
@@ -99,6 +121,10 @@
       default: 0,
     },
     todayTotalSales: {
+      type: [Number, String], // Allow both Number and String to prevent warnings
+      default: 0.00,
+    },
+    todayTotalAppointments: {
       type: [Number, String], // Allow both Number and String to prevent warnings
       default: 0.00,
     },

@@ -3,7 +3,7 @@
       <!-- Logo -->
       <Link
   v-if="$page.props.auth.user.roles[0].name === 'admin'"
-  class="flex items-center w-full mt-3 px-4"
+  class="flex items-center w-full px-4 mt-3"
   :href="route('admin.dashboard')"
 >
   <div class="flex items-center justify-center">
@@ -13,13 +13,23 @@
 
 <Link
   v-if="$page.props.auth.user.roles[0].name === 'clerk'"
-  class="flex items-center w-full mt-3 px-4"
+  class="flex items-center w-full px-4 mt-3"
   :href="route('clerk.dashboard')"
 >
   <div class="flex items-center justify-center">
     <img src="./logored.svg" alt="Logo" class="w-40 h-20" />
   </div>
 </Link>
+<Link
+  v-if="$page.props.auth.user.roles[0].name === 'patient'"
+  class="flex items-center w-full px-4 mt-3"
+  :href="route('patient.dashboard')"
+>
+  <div class="flex items-center justify-center">
+    <img src="./logored.svg" alt="Logo" class="w-40 h-20" />
+  </div>
+</Link>
+
 
 
       <!-- Navigation Links -->
@@ -50,11 +60,143 @@
     </svg>
     <span class="ml-2 text-sm font-medium">Clerk Dashboard</span>
 </Link>
+<!-- patient Dashboard -->
+<Link
+  v-if="$page.props.auth.user.roles[0].name === 'patient'"
+  :href="route('patient.dashboard')"
+  :class="{ 'bg-red-600 font-bold text-white': $page.component === 'PatientDashboard' }"
+  class="flex items-center w-full h-12 px-3 mt-6 rounded hover:bg-red-600 hover:text-white"
+>
+    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+    </svg>
+    <span class="ml-2 text-sm font-medium">Patient Dashboard</span>
+</Link>
+<!-- Reservations Dropdown Button -->
+<button
+v-if="$page.props.auth.user.roles[0].name === 'clerk' || $page.props.auth.user.roles[0].name === 'admin'"
+
+      @click="toggleReservationsDropdown"
+
+      class="flex items-center w-full h-12 px-3 mt-1 rounded hover:bg-red-600 hover:text-white"
+      aria-expanded="reservationsDropdownOpen"
+    >
+      <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 3v16c0 .552.448 1 1 1h12c.552 0 1-.448 1-1V3c0-.552-.448-1-1-1H6c-.552 0-1 .448-1 1zm0 4h14m-7 8v4m-2-8v-4h2m2 4v-4h2m-4 8h4"
+        />
+      </svg>
+      <span class="relative ml-2 text-sm font-medium">
+        Appointments
+        <span
+          v-if="newReservationsCount > 0"
+
+          class="absolute top-0 right-0 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full"
+          style="transform: translate(100%, -50%)"
+        >
+          {{ newReservationsCount }}
+        </span>
+      </span>
+      <svg class="w-4 h-4 ml-auto text-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#9ca3af">
+        <path d="M5.5 7.5L10 12l4.5-4.5H5.5z" />
+      </svg>
+    </button>
+
+    <!-- Reservations Dropdown Content -->
+    <div v-if="reservationsDropdownOpen" class="ml-6" >
+        <Link v-if="$page.props.auth.user.roles[0].name === 'clerk' || $page.props.auth.user.roles[0].name === 'admin'"
+
+        :href="route('reservations.index')"
+        @click="markReservationsViewed"
+        :class="{ 'bg-red-600  font-bold text-white': $page.component === 'Frontend/Reservation/Index' }"
+
+        class="relative block px-4 py-2 mt-1 text-sm rounded hover:bg-red-600 hover:text-white"
+      >
+        Appointment List
+        <span
+          v-if="newReservationsCount > 0"
+
+          class="absolute top-0 right-0 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full"
+          style="transform: translate(50%, -50%)"
+        >
+          {{ newReservationsCount }}
+        </span>
+      </Link>
+      <Link v-if="$page.props.auth.user.roles[0].name === 'clerk' || $page.props.auth.user.roles[0].name === 'admin'"
+
+        :href="route('reservations.history')"
+              :class="{ 'bg-red-600  font-bold text-white': $page.component === 'Frontend/Reservation/ReservationHistory' }"
+
+        class="block px-4 py-2 mt-1 text-sm rounded hover:bg-red-600 hover:text-white"
+      >
+        Appointment History
+      </Link>
+    </div>
+    <button
+    v-if="$page.props.auth.user.roles[0].name === 'patient'"
+
+
+      @click="toggleReservationsDropdown"
+
+      class="flex items-center w-full h-12 px-3 mt-1 rounded hover:bg-red-600 hover:text-white"
+      aria-expanded="reservationsDropdownOpen"
+    >
+      <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 3v16c0 .552.448 1 1 1h12c.552 0 1-.448 1-1V3c0-.552-.448-1-1-1H6c-.552 0-1 .448-1 1zm0 4h14m-7 8v4m-2-8v-4h2m2 4v-4h2m-4 8h4"
+        />
+      </svg>
+      <span class="relative ml-2 text-sm font-medium">
+        Appointments
+        <span
+          v-if="newReservationsCount > 0"
+
+          class="absolute top-0 right-0 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full"
+          style="transform: translate(100%, -50%)"
+        >
+          {{ newReservationsCount }}
+        </span>
+      </span>
+      <svg class="w-4 h-4 ml-auto text-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#9ca3af">
+        <path d="M5.5 7.5L10 12l4.5-4.5H5.5z" />
+      </svg>
+    </button>
+
+    <!-- Reservations Dropdown Content sa patient -->
+    <div v-if="reservationsDropdownOpen" class="ml-6">
+
+      <Link v-if="$page.props.auth.user.roles[0].name === 'patient'"
+
+
+        :href="route('user.reservations.history')"
+              :class="{ 'bg-red-600  font-bold text-white': $page.component === 'Frontend/User/PatientReservationHistory' }"
+
+        class="block px-4 py-2 mt-1 text-sm rounded hover:bg-red-600 hover:text-white"
+      >
+        Appointment History
+      </Link>
+      <Link v-if="$page.props.auth.user.roles[0].name === 'patient'"
+
+
+        :href="route('user.applyReservation')"
+              :class="{ 'bg-red-600  font-bold text-white': $page.component === 'Frontend/User/ApplyAppointment' }"
+
+        class="block px-4 py-2 mt-1 text-sm rounded hover:bg-red-600 hover:text-white"
+      >
+        Apply Appointment
+      </Link>
+    </div>
 
           <!-- Patients -->
           <Link
             @click="closeDropdown"
-            v-if="$page.props.auth.user.roles[0].name === 'admin'"
+            v-if="$page.props.auth.user.roles[0].name === 'clerk' || $page.props.auth.user.roles[0].name === 'admin'"
             :class="{ 'bg-red-600  font-bold text-white': $page.component === 'Frontend/Patient/Index' }"
             class="flex items-center w-full h-12 px-3 mt-1 rounded hover:bg-red-600 hover:text-white"
             :href="route('patients')"
@@ -65,38 +207,71 @@
             <span class="ml-2 text-sm font-medium">Patients</span>
           </Link>
 
+          <Link
+            @click="closeDropdown"
+            v-if="$page.props.auth.user.roles[0].name === 'patient' "
+            :class="{ 'bg-red-600  font-bold text-white': $page.component === 'Frontend/Patient/Index' }"
+            class="flex items-center w-full h-12 px-3 mt-1 rounded hover:bg-red-600 hover:text-white"
+            :href="route('user.purchase')"
+          >
+          <svg class="w-6 h-6 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="black">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+              />
+            </svg>
+            <span class="ml-2 text-sm font-medium">User Details</span>
+          </Link>
+
           <!-- Products Dropdown -->
-          <div class="w-full">
-            <button
-              @click="toggleDropdown"
-              class="flex items-center w-full h-12 px-3 mt-1 rounded hover:bg-red-600 hover:text-white"
-              aria-expanded="dropdownOpen"
-            >
+        <div class="w-full">
+          <button
+            @click="toggleProductsDropdown"
+            v-if="$page.props.auth.user.roles[0].name === 'clerk' || $page.props.auth.user.roles[0].name === 'admin'"
+
+            class="flex items-center w-full h-12 px-3 mt-1 rounded hover:bg-red-600 hover:text-white"
+            aria-expanded="productsDropdownOpen"
+          >
             <svg class="w-6 h-6 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="black">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-					  </svg>
-              <span class="ml-2 text-sm font-medium">Products</span>
-              <svg class="w-4 h-4 ml-auto text-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#9ca3af">
-                <path d="M5.5 7.5L10 12l4.5-4.5H5.5z" />
-              </svg>
-            </button>
-            <div v-if="dropdownOpen" class="ml-6">
-              <Link
-                :href="route('products.index')"
-                :class="{ 'bg-red-600  font-bold text-white': $page.component === 'Frontend/Product/Index' }"
-                class="block px-4 py-2 mt-1 text-sm text-black rounded hover:bg-red-600 hover:text-white"
-              >
-                Product List
-              </Link>
-              <Link
-                :href="route('products.category')"
-                :class="{ 'bg-red-600  font-bold text-white': $page.component === 'Frontend/Product/CategoryList' }"
-                class="block px-4 py-2 mt-1 text-sm text-black rounded hover:bg-red-600 hover:text-white"
-              >
-                Categories
-              </Link>
-            </div>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+              />
+            </svg>
+            <span class="ml-2 text-sm font-medium">Inventory</span>
+            <svg class="w-4 h-4 ml-auto text-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#9ca3af">
+              <path d="M5.5 7.5L10 12l4.5-4.5H5.5z" />
+            </svg>
+          </button>
+          <div v-if="productsDropdownOpen" class="ml-6">
+            <Link
+              :href="route('products.index')"
+              :class="{ 'bg-red-600 font-bold text-white': $page.component === 'Frontend/Product/Index' }"
+              class="block px-4 py-2 mt-1 text-sm rounded hover:bg-red-600 hover:text-white"
+            >
+              Product List
+            </Link>
+            <Link
+              :href="route('products.category')"
+              :class="{ 'bg-red-600 font-bold text-white': $page.component === 'Frontend/Product/CategoryList' }"
+              class="block px-4 py-2 mt-1 text-sm rounded hover:bg-red-600 hover:text-white"
+            >
+              Categories
+            </Link>
+            <Link
+              :href="route('batchList.index')"
+              :class="{ 'bg-red-600 font-bold text-white': $page.component === 'Frontend/Product/BatchList' }"
+              class="block px-4 py-2 mt-1 text-sm rounded hover:bg-red-600 hover:text-white"
+            >
+              Batch List
+            </Link>
           </div>
+        </div>
+
 
           <!-- POS -->
           <Link
@@ -116,6 +291,8 @@
 
           <!-- Report -->
           <Link
+          v-if="$page.props.auth.user.roles[0].name === 'clerk' || $page.props.auth.user.roles[0].name === 'admin'"
+
             @click="closeDropdown"
             :class="{ 'bg-red-600  font-bold text-white': $page.component === 'Frontend/POS/GetTransactionHistory' }"
             class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-red-600 hover:text-white"
@@ -130,6 +307,8 @@
           <!-- Notification -->
           <Link
             @click="closeDropdown"
+            v-if="$page.props.auth.user.roles[0].name === 'clerk' || $page.props.auth.user.roles[0].name === 'admin'"
+
             class="relative flex items-center w-full h-12 px-3 mt-1 rounded hover:bg-gray-700 hover:text-white"
             :href="route('notifications.index')"
           >
@@ -137,30 +316,76 @@
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
 					</svg>
             <span class="ml-2 text-sm font-medium">Notification</span>
-            <span class="absolute top-0 left-0 w-2 h-2 mt-2 ml-2 bg-red-500 rounded-full"></span>
+            <span
+            v-if="props.notifications > 0"
+            class="absolute top-0 left-0 w-2 h-2 mt-2 ml-2 bg-red-500 rounded-full"></span>
+          </Link>
+ <!-- Accounts -->
+ <Link
+            @click="closeDropdown"
+            v-if=" $page.props.auth.user.roles[0].name === 'admin'"
+
+            class="relative flex items-center w-full h-12 px-3 mt-1 rounded hover:bg-gray-700 hover:text-white"
+            :href="route('accounts.index')"
+          >
+					<svg class="w-6 h-6 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+					</svg>
+            <span class="ml-2 text-sm font-medium">Accounts </span>
           </Link>
 
-          <!-- Settings -->
-          <Link
-            @click="closeDropdown"
-            class="flex items-center w-full h-12 px-3 mt-1 rounded hover:bg-gray-700 hover:text-white"
-            :href="route('placeholder')"
-          >
-					<svg class="w-6 h-6 stroke-current"  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-					</svg>
-            <span class="ml-2 text-sm font-medium">Settings</span>
-          </Link>
 
         </div>
       </div>
     </div>
   </template>
 
-  <script setup>
-  import { Link, usePage } from "@inertiajs/inertia-vue3";
-  import { ref, onMounted, onBeforeUnmount } from 'vue';
+<script setup>
+  import { Link } from "@inertiajs/inertia-vue3";
+  import { ref, onMounted, onBeforeUnmount, defineProps } from 'vue';
   import logored from "./logored.vue";
+  import { route } from 'ziggy-js';
+  import axios from "axios";
+// Toggle dropdown
+
+const props = defineProps({
+		notifications: {
+    		type: Array,
+    		default: () => [], // Default to an empty array
+  		},
+	});
+
+const newReservationsCount = ref(0);
+const fetchNewReservationsCount = async () => {
+  const response = await axios.get(route('reservations.count'));
+  newReservationsCount.value = response.data.new_count;
+};
+const markReservationsViewed = async () => {
+  await axios.get(route('reservations.count'), { params: { markViewed: true } });
+  newReservationsCount.value = 0;
+};
+// Fetch reservation count on mount and periodically refresh
+onMounted(() => {
+  fetchNewReservationsCount();
+  setInterval(fetchNewReservationsCount, 60000); // Update every 1 minute
+});
+
+
+// Reset new reservation count (on click)
+const resetNewReservationsCount = async () => {
+    try {
+        await axios.post(route('reservations.mark.viewed'));
+        newReservationsCount.value = 0; // Hide the badge
+    } catch (error) {
+        console.error('Error resetting reservation count:', error);
+    }
+};
+
+// Fetch the new reservation count on page load
+onMounted(() => {
+    fetchNewReservationsCount();
+});
+
 
   const dropdownOpen = ref(false);
 
@@ -175,18 +400,38 @@ const closeDropdown = () => {
 }
 
 
+const reservationsDropdownOpen = ref(false);
+const productsDropdownOpen = ref(false);
+
+// Functions to toggle dropdowns
+const toggleReservationsDropdown = () => {
+  reservationsDropdownOpen.value = !reservationsDropdownOpen.value;
+  localStorage.setItem("reservationsDropdownOpen", reservationsDropdownOpen.value);
+};
+
+const toggleProductsDropdown = () => {
+  productsDropdownOpen.value = !productsDropdownOpen.value;
+  localStorage.setItem("productsDropdownOpen", productsDropdownOpen.value);
+};
+
 // Restore dropdown state on component mount
 onMounted(() => {
-    const savedState = localStorage.getItem('dropdownOpen');
-    if (savedState !== null ) {
-        dropdownOpen.value = savedState === 'true';
-    }
+  // Restore Reservations Dropdown State
+  const savedReservationsState = localStorage.getItem("reservationsDropdownOpen");
+  reservationsDropdownOpen.value = savedReservationsState === "true";
+
+  // Restore Products Dropdown State
+  const savedProductsState = localStorage.getItem("productsDropdownOpen");
+  productsDropdownOpen.value = savedProductsState === "true";
 });
 
-// Close dropdown when navigating away
+
+// Close dropdowns when navigating away
 onBeforeUnmount(() => {
-    dropdownOpen.value = false;
-    localStorage.setItem("dropdownOpen", "false");
+  reservationsDropdownOpen.value = false;
+  productsDropdownOpen.value = false;
+  localStorage.setItem("reservationsDropdownOpen", "false");
+  localStorage.setItem("productsDropdownOpen", "false");
 });
   </script>
 

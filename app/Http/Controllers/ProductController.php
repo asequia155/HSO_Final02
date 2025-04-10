@@ -1,7 +1,8 @@
 <?php
 namespace App\Http\Controllers;
-
+use App\Models\Notification;
 use App\Models\Product;
+use App\Models\Batch;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Category;
@@ -10,11 +11,11 @@ use Illuminate\Support\Facades\Log;
 
 
 class ProductController extends Controller
-{   
+{
     public function index()
     {
         $products = Product::all();
-        $categories = Category::all();
+        $categories = Category::withCount('products')->get();
         $existingProductCodes = Product::pluck('product_code')->toArray(); // Fetch existing product codes
 
         return Inertia::render('Frontend/Product/Index', [
@@ -23,6 +24,8 @@ class ProductController extends Controller
             'existingProductCodes' => $existingProductCodes,
             'message' => session('message'),
             'message_type' => session('message_type'),
+            'notifications' => Notification::where('is_read', false)->latest()->take(3)->get(),
+
         ]);
     }
 
@@ -76,11 +79,11 @@ class ProductController extends Controller
 }
 
 
-    
+
 
     public function edit(Product $product)
     {
-        
+
         return Inertia::render('Frontend/Product/Edit', [
             'product' => $product,
             'categories' => Category::all(), // Ensure categories are available for the edit form
@@ -97,14 +100,14 @@ class ProductController extends Controller
             'category_id' => 'sometimes|nullable|exists:categories,id',
             'quantity' => 'required|integer|min:0', // Validate quantity
         ]);
-    
+
         $product = Product::findOrFail($id);
-    
+
         // Set a default category if category_id is not provided or invalid
         $validated['category_id'] = $validated['category_id'] ?? 'others'; // Adjust according to your category table
-    
+
         $product->update($validated);
-    
+
         return redirect()->route('products.index')
             ->with('message', 'Product updated successfully.')
             ->with('message_type', 'success');
@@ -113,25 +116,36 @@ class ProductController extends Controller
     public function addStock(Request $request, $id)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'description' => 'nullable|string|max:500',
-            'category_id' => 'sometimes|nullable|exists:categories,id',
-            'quantity' => 'required|integer|min:0', // Validate if category exists
+            'quantity' => 'required|integer|min:1',
+            'batch.batch_number' => 'nullable|string|max:255',
+            'batch.production_date' => 'nullable|date',
+            'batch.expiry_date' => 'nullable|date',
         ]);
 
         $product = Product::findOrFail($id);
 
-        // Set a default category if category_id is not provided or invalid
-        $validated['category_id'] = $validated['category_id'] ?? 'others'; // Adjust according to your category table
+        // Add batch details
+        if (!empty($validated['batch'])) {
+            Batch::create([
+                'product_id' => $product->id,
+                'batch_number' => $validated['batch']['batch_number'] ?? null,
+                'production_date' => $validated['batch']['production_date'] ?? null,
+                'expiry_date' => $validated['batch']['expiry_date'] ?? null,
+                'quantity' => $validated['quantity'],
+            ]);
+        }
 
-        $product->update($validated);
+        // Recompute total quantity based on all batches
+        $product->quantity = Batch::where('product_id', $product->id)->sum('quantity');
+        $product->save();
+
 
         return redirect()->route('products.index')
-        ->with('message', 'Stock added successfully.')
-        ->with('message_type', 'success');
+            ->with('message', 'Stock added successfully.')
+            ->with('message_type', 'success');
     }
-    
+
+
     public function destroy(Product $product)
     {
         $product->delete();
@@ -146,3 +160,5 @@ class ProductController extends Controller
     return app(CategoryController::class)->index(); // Call CategoryController logic
 }
 }
+
+

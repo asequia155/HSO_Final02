@@ -48,7 +48,7 @@ const submit = () => {
                 <TextInput
                     id="email"
                     type="email"
-                    class="input100 input100-email block w-full mt-1"
+                    class="block w-full mt-1 input100 input100-email"
                     v-model="form.email"
                     required
                     autofocus
@@ -72,7 +72,7 @@ const submit = () => {
                 <TextInput
                     id="password"
                     type="password"
-                    class="input100 block w-full mt-1"
+                    class="block w-full mt-1 input100"
                     v-model="form.password"
                     required
                     autocomplete="current-password"
@@ -95,7 +95,7 @@ const submit = () => {
                 </label>
             </div>
 
-            <div class="container-login100-form-btn flex items-center justify-center" style="margin-top: 12px;">
+            <div class="flex items-center justify-center container-login100-form-btn" style="margin-top: 12px;">
                 <PrimaryButton
     class="login100-form-btn"
     :class="{ 'opacity-25': form.processing }"
@@ -104,7 +104,16 @@ const submit = () => {
     Log in
 </PrimaryButton>
             </div>
-            <div class="flex justify-center mt-2">
+            <div class="flex flex-col items-center justify-center mt-4 space-y-2">
+    <!-- Register Link -->
+    <Link
+        :href="route('register')"
+        class="text-sm text-gray-600 underline rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+    >
+        Don't have an account? Register here.
+    </Link>
+
+    <!-- Forgot Password Link -->
     <Link
         v-if="canResetPassword"
         :href="route('password.request')"
@@ -113,6 +122,7 @@ const submit = () => {
         Forgot your password?
     </Link>
 </div>
+
 
         </form>
     </GuestLayout>

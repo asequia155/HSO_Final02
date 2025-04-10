@@ -23,10 +23,13 @@ function goHome() {
         width: 100%;
     "
 >
-    >
-            <div
-                class="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg h-[520px]"
-            >
+<div
+  :class="{
+    'mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg h-[520px]': $page.component === 'Auth/Login',
+    'mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg h-[560]': $page.component !== 'Auth/Login'
+  }"
+>
+
             <div @click="goHome" class="cursor-pointer">
                 <div class="flex items-center justify-center " style="margin-bottom: -6px;">
                     <img src="../Components/logored.svg" alt="Logo" class="w-18 h-automatic" />

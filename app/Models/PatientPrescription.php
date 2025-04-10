@@ -11,11 +11,11 @@ class PatientPrescription extends Model
     protected $fillable = [
         'patient_id',
         'date',
-        'rx',
         'od',
         'os',
         'add',
         'pd',
+        'remarks',
     ];
 
     public function patient()

@@ -2,10 +2,10 @@
 	<DashboardLayout>
 		<!-- Alert -->
 		<transition name="alert-fade">
-    <div v-if="message && messageType === 'success'" class="flex items-center border-t-4 border-green-700 bg-green-100 px-4 py-3 shadow-md mb-4">
+    <div v-if="message && messageType === 'success'" class="flex items-center px-4 py-3 mb-4 bg-green-100 border-t-4 border-green-700 shadow-md">
       <div class="flex items-center">
         <!-- Checkmark Icon -->
-        <svg class="h-6 w-6 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg class="w-6 h-6 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
         <!-- Alert Text -->
@@ -15,8 +15,8 @@
   </transition>
 
 		<!-- Header Section -->
-		<div class="bg-white shadow-md rounded-lg p-4 mb-6">
-			<div class="flex justify-between items-center">
+		<div class="p-4 mb-6 bg-white rounded-lg shadow-md">
+			<div class="flex items-center justify-between">
 				<!-- Breadcrumbs and Title -->
 				<div>
 					<nav class="flex" aria-label="Breadcrumb">
@@ -24,8 +24,8 @@
 							<!-- Home Icon and Link -->
 							<li>
 								<div class="flex items-center space-x-1">
-									<a href="/" class="inline-flex items-center group text-red-600 hover:text-red-600 text-sm font-medium">
-										<svg class="w-5 h-5 text-gray-500 mr-1 group-hover:text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<a href="/" class="inline-flex items-center text-sm font-medium text-red-600 group hover:text-red-600">
+										<svg class="w-5 h-5 mr-1 text-gray-500 group-hover:text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 											<path
 												stroke-linecap="round"
 												stroke-linejoin="round"
@@ -39,7 +39,7 @@
 										<path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
 									</svg>
 
-									<a href="products" class="inline-flex items-center hover:text-red-600 text-gray-700 text-sm font-medium">
+									<a href="products" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-red-600">
 										Products
 									</a>
 
@@ -47,56 +47,94 @@
 										<path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
 									</svg>
 
-									<a href="products" class="inline-flex items-center text-red-600 text-sm font-medium">
+									<a href="products" class="inline-flex items-center text-sm font-medium text-red-600">
 										Products List
 									</a>
 								</div>
 							</li>
 						</ol>
 					</nav>
-					<h1 class="text-xl font-semibold text-gray-900 mt-2">Products List</h1>
+					<h1 class="mt-2 text-xl font-semibold text-gray-900">Products List</h1>
 				</div>
 				<div class="flex items-center space-x-3">
-					<div class="hidden sm:flex sm:items-center sm:ml-6">
-						<div class="ml-3 relative">
-							<Dropdown align="right" width="48">
-								<template #trigger>
-									<span class="inline-flex rounded-md">
-										<button
-											type="button"
-											class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-black bg-transparent focus:outline-none transition ease-in-out duration-150"
-										>
-											<svg class="w-6 h-6 mr-1 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-												<path
-													stroke-linecap="round"
-													stroke-linejoin="round"
-													stroke-width="2"
-													d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-												/>
-											</svg>
-											{{ $page.props.auth.user.name }}
-											<svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-												<path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-											</svg>
-										</button>
-									</span>
-								</template>
+                <div class="relative mt-2">
+                    <!-- Notification Icon -->
+                    <button @click.prevent="toggleNotifDropdown">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M15 17h5l-1.405-1.405C18.317 14.74 18 13.38 18 12V9c0-3.866-3.134-7-7-7S4 5.134 4 9v3c0 1.38-.317 2.74-.595 3.595L2 17h5m8 0a3 3 0 01-6 0m6 0H9"
+                            />
+                        </svg>
+                        <span v-if="notifications.length > 0" class="absolute bottom-0 left-0 w-2 h-2 mb-6 ml-5 bg-red-500 rounded-full"></span>
+                    </button>
 
-								<template #content>
-									<DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
-									<DropdownLink :href="route('logout')" method="post" as="button">
-										Log Out
-									</DropdownLink>
-								</template>
-							</Dropdown>
-						</div>
-					</div>
-				</div>
+                    <!-- Notification Dropdown -->
+                    <div v-if="notifDropdownOpen" class="absolute right-0 z-10 overflow-hidden bg-white rounded-lg shadow-lg w-72">
+                        <ul>
+                            <!-- FIX: Correct key and property bindings -->
+                            <li v-for="notification in notifications" :key="notification.id" class="p-4 border-b">
+                                <div>
+                                    <h4 class="font-semibold">{{ notification.title }}</h4>
+                                    <p class="text-sm text-gray-600">{{ notification.message }}</p>
+                                </div>
+                            </li>
+                            <li>
+                                <Link :href="route('notifications.index')">
+
+                                <div v-if="notifications.length !== 0"  class="p-2 text-center text-gray-500">
+                                    Show all notifications
+                                </div>
+                            </Link>
+                            </li>
+                        </ul>
+                        <!-- FIX: Check notifications array directly -->
+                        <div v-if="notifications.length === 0" class="p-4 text-center text-gray-500">
+                            No new notifications
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden sm:flex sm:items-center sm:ml-6">
+                    <div class="relative ml-3">
+                        <Dropdown align="right" width="48">
+                            <template #trigger>
+                                <span class="inline-flex rounded-md">
+                                    <button
+                                        type="button"
+                                        class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-black transition duration-150 ease-in-out bg-transparent border border-transparent rounded-md focus:outline-none"
+                                    >
+                                        <svg class="w-6 h-6 mr-1 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                            />
+                                        </svg>
+                                        {{ $page.props.auth.user.name }}
+                                        <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                </span>
+                            </template>
+
+                            <template #content>
+                                <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
+                                <DropdownLink :href="route('logout')" method="post" as="button">
+                                    Log Out
+                                </DropdownLink>
+                            </template>
+                        </Dropdown>
+                    </div>
+                </div>
+            </div>
 			</div>
 		</div>
 
-		<div class="bg-white rounded-lg shadow-lg overflow-visible relative">
-			<div class="flex items-center p-4 border-b border-neutral-200 justify-between w-full">
+		<div class="relative overflow-visible bg-white rounded-lg shadow-lg">
+			<div class="flex items-center justify-between w-full p-4 border-b border-neutral-200">
 				<div class="flex items-center space-x-4">
 					<!-- Search Bar and Filter Button -->
 					<form class="flex items-center">
@@ -112,20 +150,21 @@
 								id="search"
 								v-model="searchQuery"
 								placeholder="Search Product..."
-								class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+								class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
 							/>
 						</div>
 					</form>
+
 					<!-- Filter Dropdown -->
 					<div class="relative inline-block text-left">
 						<!-- Toggle Button -->
 						<button
 							@click="toggleCategoryDropdown"
 							id="filterDropdownButton"
-							class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:border-red-500 bg-white rounded-lg border border-gray-300 hover:bg-red-100 hover:text-red-500 focus:z-10 focus:ring-4 focus:ring-red-200 dark:focus:ring-red-700 dark:bg-red-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-blue-400 dark:hover:bg-gray-700"
+							class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg md:w-auto focus:border-red-500 hover:bg-red-100 hover:text-red-500 focus:z-10 focus:ring-4 focus:ring-red-200 dark:focus:ring-red-700 dark:bg-red-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-blue-400 dark:hover:bg-gray-700"
 							type="button"
 						>
-							<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-4 w-4 mr-2 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+							<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="w-4 h-4 mr-2 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
 								<path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
 							</svg>
 							Filter
@@ -141,60 +180,78 @@
 								<li v-for="category in props.categories" :key="category.id" @click.stop class="flex items-center">
 									<input type="checkbox" :id="'category-' + category.id" :value="category.id" v-model="selectedCategories" class="w-4 h-4 bg-red-100 border-red-300 rounded focus:ring-2 focus:ring-red-500 focus:outline-none checked:bg-red-500 checked:border-red-500" />
 									<label :for="'category-' + category.id" class="ml-2 text-sm font-medium text-gray-900 dark:text-white">
-										{{ category.name }} ({{ category.count }})
+										{{ category.name }} ({{ category.products_count}})
 									</label>
 								</li>
 							</ul>
 						</div>
 					</div>
 				</div>
+				<!-- Low Stock Filter -->
+				<div class="flex items-center ml-4">
+				<label for="lowStockToggle" class="mr-2 text-sm font-medium text-gray-700">Low Stock:</label>
+				<input
+					type="checkbox"
+					id="lowStockToggle"
+					:checked="lowStockOnly"
+					@change="toggleLowStock"
+					class="w-5 h-5 text-red-500 border-gray-300 rounded focus:ring-red-500"
+				/>
+				</div>
+				<div class="flex items-center ml-4">
+				<label for="overstockToggle" class="mr-2 text-sm font-medium text-gray-700">Overstock:</label>
+				<input
+					type="checkbox"
+					id="overstockToggle"
+					:checked="overstockOnly"
+					@change="toggleOverstock"
+					class="w-5 h-5 text-green-500 border-gray-300 rounded focus:ring-green-500"
+				/>
+				</div>
+
 				<!-- Buttons -->
 				<div class="flex items-center ml-auto space-x-3">
 					<!-- Icon Buttons -->
-					<button @click="exportToExcel" class="flex items-center justify-center w-9 h-9 rounded-full bg-yellow-100 hover:bg-yellow-200" title="Export to excel">
+					<button @click="exportToPDF" class="flex items-center justify-center bg-yellow-100 rounded-full w-9 h-9 hover:bg-yellow-200" title="Export to PDF">
 						<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 9v10h12V9M6 5h12v4H6z" />
 						</svg>
 					</button>
-					<button class="flex items-center justify-center w-9 h-9 rounded-full bg-purple-100 hover:bg-purple-200" title="Export">
-						<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v8m4-4H8" />
-						</svg>
-					</button>
+
 					<!-- Add Category Button -->
-					<button @click="openAddModal" class="bg-red-600 text-white font-semibold px-4 py-2 rounded-lg text-sm hover:bg-gray-600 transition duration-300">
+					<button @click="openAddModal" class="px-4 py-2 text-sm font-semibold text-white transition duration-300 bg-red-600 rounded-lg hover:bg-gray-600">
 						+ New Product
 					</button>
 				</div>
 			</div>
 
 			<div class="overflow-x-auto">
-				<div v-if="products.length === 0" class="text-gray-500 text-center py-8">
+				<div v-if="products.length === 0" class="py-8 text-center text-gray-500">
 					No products yet
 				</div>
-				<table class="min-w-full text-left text-sm font-light text-gray-700">
-					<thead class="text-xs text-gray-700 uppercase bg-gray-200 text-left">
+				<table class="min-w-full text-sm font-light text-left text-gray-700">
+					<thead class="text-xs text-left text-gray-700 uppercase bg-gray-200">
 						<tr>
 							<th scope="col" class="px-6 py-4">Product Code</th>
 							<th scope="col" class="px-6 py-4">Name</th>
 							<th scope="col" class="px-6 py-4">Category</th>
 							<th scope="col" class="px-6 py-4">Price</th>
 							<th scope="col" class="px-6 py-4">Description</th>
-							<th scope="col" class="px-6 py-4">Quantity</th>
+							<th scope="col" class="px-6 py-4">Stock</th>
 							<th scope="col" class="px-6 py-4">Action</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr v-for="item in paginatedProducts" :key="item.id" class="border-b border-neutral-200 transition hover:bg-neutral-100 cursor-pointer" @click="openModal('show', item)">
-							<td class="whitespace-nowrap px-6 py-3">{{ item.product_code }}</td>
-							<td class="whitespace-nowrap px-6 py-3">{{ item.name }}</td>
-							<td class="whitespace-nowrap px-6 py-3">{{ categoryMap[item.category_id] || 'Uncategorized' }}</td>
-							<td class="whitespace-nowrap px-6 py-3"><a>₱ </a>{{ Number(item.price).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</td>
-							<td class="whitespace-nowrap px-6 py-3">
+						<tr v-for="item in paginatedProducts" :key="item.id" class="transition border-b cursor-pointer border-neutral-200 hover:bg-neutral-100" @click="openModal('show', item)">
+							<td class="px-6 py-3 whitespace-nowrap">{{ item.product_code }}</td>
+							<td class="px-6 py-3 capitalize whitespace-nowrap">{{ item.name }}</td>
+							<td class="px-6 py-3 capitalize whitespace-nowrap">{{ categoryMap[item.category_id] || 'Uncategorized' }}</td>
+							<td class="px-6 py-3 whitespace-nowrap"><a>₱ </a>{{ Number(item.price).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</td>
+							<td class="px-6 py-3 whitespace-nowrap">
 								{{ item.description.length > 25 ? item.description.slice(0, 25) + '...' : item.description }}
 							</td>
-							<td class="whitespace-nowrap px-6 py-3">{{ item.quantity }}</td>
-							<td class="whitespace-nowrap px-6 py-3">
+							<td class="px-6 py-3 whitespace-nowrap">{{ item.quantity }}</td>
+							<td class="px-6 py-3 whitespace-nowrap">
 								<button
 									id="apple-ipad-air-dropdown-button"
 									@click.stop="toggleDropdown(item.id)"
@@ -206,10 +263,10 @@
 									</svg>
 								</button>
 								<!-- Dropdown Menu -->
-								<div v-if="dropdownOpen === item.id" class="absolute right-0 z-50 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+								<div v-if="dropdownOpen === item.id" class="absolute right-0 z-50 bg-white divide-y divide-gray-100 rounded shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
 									<ul class="py-1 text-sm" aria-labelledby="apple-ipad-air-dropdown-button">
 										<li>
-											<button @click.stop="openAddStockModal(item)" class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+											<button @click.stop="openAddStockModal(item)" class="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white dark:text-gray-200">
 												<svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
 													<path
 														d="M12 4C11.448 4 11 4.448 11 5V11H5C4.448 11 4 11.448 4 12C4 12.552 4.448 13 5 13H11V19C11 19.552 11.448 20 12 20C12.552 20 13 19.552 13 19V13H19C19.552 13 20 12.552 20 12C20 11.448 19.552 11 19 11H13V5C13 4.448 12.552 4 12 4Z"
@@ -222,7 +279,7 @@
 											<button
 												@click.stop="openModal('edit', item)"
 												@click="openModal('edit', item)"
-												class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200"
+												class="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white dark:text-gray-200"
 											>
 												<svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
 													<path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
@@ -235,7 +292,7 @@
 											<button
 												@click.stop="openDeleteModal(item.name, item.id)"
 												@click="openDeleteModal(item.name, item.id)"
-												class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:hover:text-red-400"
+												class="flex items-center w-full px-4 py-2 text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-red-400"
 											>
 												<svg class="w-4 h-4 mr-2" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 													<path
@@ -256,17 +313,46 @@
 				</table>
 			</div>
 			<!-- pagination -->
-			<div class="flex flex-col md:flex-row justify-between items-center p-4 border-t border-neutral-200 relative z-10">
+			<div class="relative z-10 flex flex-col items-center justify-between p-4 border-t md:flex-row border-neutral-200">
 				<span class="text-sm font-normal text-gray-500"> Showing <span class="font-semibold">{{ startItem }}</span> - <span class="font-semibold">{{ endItem }}</span> of <span class="font-semibold">{{ totalItems }}</span> </span>
-				<ul class="inline-flex items-stretch -space-x-px mt-2 md:mt-0">
+				<ul class="inline-flex items-stretch mt-2 -space-x-px md:mt-0">
 					<li>
-						<button @click="prevPage" :disabled="currentPage === 1" class="px-3 py-1.5 border rounded-l-lg">Prev</button>
+						<button
+						@click="prevPage"
+						:disabled="currentPage === 1"
+						class="px-3 py-1.5 border rounded-l-lg">
+						Prev
+						</button>
 					</li>
-					<li v-for="page in totalPages" :key="page">
-						<button @click="changePage(page)" :class="['px-3 py-1.5 border', currentPage === page ? 'bg-gray-300' : 'bg-white']">{{ page }}</button>
+
+					<!-- Page Numbers -->
+					<li v-if="currentPage > 3">
+						<button @click="changePage(1)" class="px-3 py-1.5 border bg-white">1</button>
+						<span class="px-2 py-1.5">...</span>
 					</li>
+
+					<!-- Dynamic Pages -->
+					<li v-for="page in visiblePages" :key="page">
+						<button
+						@click="changePage(page)"
+						:class="['px-3 py-1.5 border', currentPage === page ? 'bg-gray-300' : 'bg-white']">
+						{{ page }}
+						</button>
+					</li>
+
+					<li v-if="currentPage < totalPages - 2">
+						<span class="px-2 py-1.5">...</span>
+						<button @click="changePage(totalPages)" class="px-3 py-1.5 border bg-white">{{ totalPages }}</button>
+					</li>
+
+					<!-- Next Button -->
 					<li>
-						<button @click="nextPage" :disabled="currentPage === totalPages" class="px-3 py-1.5 border rounded-r-lg">Next</button>
+						<button
+						@click="nextPage"
+						:disabled="currentPage === totalPages"
+						class="px-3 py-1.5 border rounded-r-lg">
+						Next
+						</button>
 					</li>
 				</ul>
 			</div>
@@ -283,6 +369,7 @@
 
 <script setup>
 		import { ref, watch, computed, defineProps } from 'vue';
+		import { Link, usePage } from "@inertiajs/inertia-vue3";
 		import ShowModal from './Show.vue';
 		import EditModal from './Edit.vue';
 		import AddProductModal from './AddProductModal.vue';
@@ -293,7 +380,8 @@
 		import { onMounted, onBeforeUnmount } from 'vue';
 		import Dropdown from '@/Components/Dropdown.vue';
 		import DropdownLink from '@/Components/DropdownLink.vue';
-		import { utils, writeFile } from 'xlsx';
+		import { jsPDF } from "jspdf";
+	    import autoTable from "jspdf-autotable";
 		import AddStock from './AddStock.vue';
 
 		const props = defineProps({
@@ -302,14 +390,25 @@
 			message: String,
 			message_type: String,
 			existingProductCodes: Array,
+			notifications: {
+				type: Array,
+				default: () => [], // Default to an empty array
+  			},
 		});
+
+		// State for dropdown visibility and notifications list
+		const notifDropdownOpen = ref(false);
+
+		// Toggle the dropdown visibility
+		const toggleNotifDropdown = () => {
+    		notifDropdownOpen.value = !notifDropdownOpen.value;
+  		};
 
 		const message = ref(props.message || '');
 		const messageType = ref(props.message_type || 'info');
-		const existingProductCodes = ref(['CODE123', 'CODE456']);
 		console.log(props.message);   // Log message content
 		console.log(props.message_type); // Log message type
-		console.log(props.existingProductCodes);
+
 		onMounted(() => {
 	  	setTimeout(() => {
 	    message.value = ''; // Clear the message after 3 seconds
@@ -330,7 +429,8 @@
 		const itemsPerPage = ref(5);
 		const isCategoryDropdownOpen1 = ref ('');
 		const selectedCategories = ref([]); // Array to store selected categories
-
+        const lowStockOnly = ref(false); // Track the state of the Low Stock filter
+		const overstockOnly = ref(false); // State for Overstock filter
 		const toggleCategoryDropdown = () => {
 		    isCategoryDropdownOpen1.value = !isCategoryDropdownOpen1.value;
 		};
@@ -352,47 +452,83 @@
 		  });
 		};
 
-		// Computed property for filtering products by search
-		const filteredProducts = computed(() => {
-		    let filtered = props.products;
-		    if (searchQuery.value) {
-		        filtered = filtered.filter(product =>
-		            product.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-		        );
-		    }
-		    if (selectedCategories.value.length > 0) {
-		    filtered = filtered.filter(product =>
-		      selectedCategories.value.includes(product.category_id)
-		    );
-		  }
-		    return filtered;
-		});
+	// Computed property for filtering products by search
+	const filteredProducts = computed(() => {
+		let filtered = props.products;
 
-		// Computed properties for pagination
-		const totalItems = computed(() => filteredProducts.value.length);
-		const startItem = computed(() => (currentPage.value - 1) * itemsPerPage.value + 1);
-		const endItem = computed(() => Math.min(startItem.value + paginatedProducts.value.length - 1, totalItems.value));
+		// Filter by search query
+		if (searchQuery.value) {
+			filtered = filtered.filter(product =>
+				product.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+			);
+		}
 
-		const paginatedProducts = computed(() => {
-		    const start = (currentPage.value - 1) * itemsPerPage.value;
-		    const end = start + itemsPerPage.value;
-		    return filteredProducts.value.slice(start, end);
-		});
+		// Filter by selected categories
+		if (selectedCategories.value.length > 0) {
+			filtered = filtered.filter(product =>
+				selectedCategories.value.includes(product.category_id)
+			);
+		}
+		// Apply Low Stock filter
+		if (lowStockOnly.value) {
+			const lowStockThreshold = 10; // Define the threshold for "Low Stock"
+			filtered = filtered.filter((product) => product.quantity <= lowStockThreshold);
 
+		}
+// Apply Overstock filter
+		if (overstockOnly.value) {
+			const overstockThreshold = 50; // Define the Overstock threshold
+			filtered = filtered.filter((product) => product.quantity >= overstockThreshold);
+		}
+		// Sort by a specific field in descending order (e.g., by ID)
+		return filtered.sort((a, b) => b.id - a.id);
+});
+
+
+		// Computed property for total items
+		const totalItems = computed(()  => filteredProducts.value.length);
 		const totalPages = computed(() => Math.ceil(totalItems.value / itemsPerPage.value));
+		const startItem = computed(() => (currentPage.value - 1) * itemsPerPage.value + 1);
+		const endItem = computed(() => Math.min(startItem.value + itemsPerPage.value - 1, totalItems.value));
 
-		// Pagination navigation
-		const nextPage = () => {
-		    if (currentPage.value < totalPages.value) currentPage.value++;
-		};
+		// Computed property for pagination
+		const paginatedProducts = computed(() => {
+		  const start = (currentPage.value - 1) * itemsPerPage.value;
+		  return filteredProducts.value.slice(start, start + itemsPerPage.value).map((product) => ({
+		    ...product,
 
-		const prevPage = () => {
-		    if (currentPage.value > 1) currentPage.value--;
-		};
+		  }));
+		});
 
-		const changePage = (page) => {
-		    currentPage.value = page;
-		};
+	const visiblePages = computed(() => {
+  const range = 5; // Number of pages to display in range
+  const pages = [];
+
+  let start = Math.max(1, currentPage.value - Math.floor(range / 2));
+  let end = Math.min(totalPages.value, start + range - 1);
+
+  if (end === totalPages.value) {
+    start = Math.max(1, end - range + 1);
+  }
+
+  for (let i = start; i <= end; i++) {
+    pages.push(i);
+  }
+  return pages;
+});
+
+// Navigation functions
+const changePage = (page) => {
+  currentPage.value = page;
+};
+
+const prevPage = () => {
+  if (currentPage.value > 1) currentPage.value--;
+};
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) currentPage.value++;
+};
 
 		// Modal management
 
@@ -404,23 +540,20 @@
 	  selectedProduct.value = item;
 	};
 
-	const updateProductQuantity = (updatedProduct) => {
-		    Inertia.put(route('products.addStock', updatedProduct.id), {
-		        name: updatedProduct.name,
-		        price: updatedProduct.price,
-		        description: updatedProduct.description,
-		        category_id: updatedProduct.category_id,
-		        quantity: updatedProduct.quantity
-		    }, {
-		        onSuccess: () => {
-		            console.log('Product updated successfully'); // Log success
-		            closeModal();
-		        },
-		        onError: (errors) => {
-		            console.error('Update failed:', errors); // Log errors
-		        }
-		    });
-	};
+	const updateProductQuantity = (payload) => {
+		console.log('Saving batch:', payload);
+
+		Inertia.post(route('products.addStock', payload.id), payload, {
+			onSuccess: () => {
+			closeModal();
+			alert('Batch added successfully!');
+			},
+			onError: (errors) => {
+			console.error('Error saving batch:', errors);
+			},
+		});
+		};
+
 
 		const openModal = (type, item) => {
 			closeDropdown();
@@ -546,24 +679,98 @@
 		onBeforeUnmount(() => {
 		    window.removeEventListener('click', closeDropdown, handleClickOutside );
 		});
+		console.log("Product Data for PDF:", props.products);
 
-	const exportToExcel = () => {
-	    const worksheetData = props.products.map((product) => ({
-	        Id: product.id,
-	        Name: product.name,
-	        Category: categoryMap.value[product.category_id] || 'Uncategorized',
-	        Price: `₱ ${Number(product.price).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`,
-	        Description: product.description.length > 25 ? product.description.slice(0, 25) + '...' : product.description,
-	        Quantity: product.quantity,
-	    }));
+	// Export products to PDF
+	const exportToPDF = () => {
+	    const doc = new jsPDF();
 
-	    const worksheet = utils.json_to_sheet(worksheetData);
-	    const workbook = utils.book_new();
-	    utils.book_append_sheet(workbook, worksheet, 'Products');
+		//Add logo
+		const logo = new Image();
+		logo.src = '/images/logo.png';
+		doc.addImage(logo, 'PNG', 30, 3, 25, 20);
 
-	    // Generate and download the Excel file
-	    writeFile(workbook, 'Products_List.xlsx');
+	  doc.setFontSize(18);
+	  doc.setFont('Helvetica', 'bold');
+	  doc.setTextColor('#e74c3c');
+	  doc.text("Hollywood Spectacles Optical", 105, 10, { align: "center" });
+
+	  doc.setFontSize(12);
+	  doc.setFont('Roboto', 'normal');
+	  doc.setTextColor('#000');
+	  doc.text("Aguinaldo Street, Iligan City", 105, 15, { align: "center" });
+	  doc.text("Contact No: 091277747297", 105, 20, { align: "center" });
+
+	  doc.setDrawColor(231, 76, 60);
+	  doc.line(10, 25, 200, 25);
+
+	  doc.setFontSize(16);
+	  doc.setFont('Roboto', 'bold');
+	  doc.setTextColor('black');
+	  doc.text("Product List", 105, 35, { align: "center" });
+
+    // Table data
+    const tableData = props.products.map((product) => [
+        product.product_code,
+        product.name,
+        props.categories.find(c => c.id === product.category_id)?.name || "Uncategorized",
+		Number(product.price).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+		product.description,
+        product.quantity,
+    ]);
+
+    // // Generate table
+    autoTable(doc, {
+        startY: 45,
+        head: [["Product Code", "Name", "Category", "Price", "Description", "Quantity"]],
+        body: tableData,
+        styles: {
+            halign: "center",
+            valign: "middle",
+            fontSize: 10, // Adjust font size to fit data properly
+        },
+        headStyles: { fillColor: [231, 76, 60], textColor: [255, 255, 255] },
+        columnStyles: {
+            3: { halign: "right" }, // Align price column to the right
+        },
+    });
+
+
+// Add Footer
+const pageHeight = doc.internal.pageSize.height;
+    doc.setFontSize(10);
+    doc.setFont('Helvetica', 'normal');
+    doc.setTextColor('#000');
+    doc.text("Generated by Hollywood Spectacles Optical", 105, pageHeight - 10, { align: "center" });
+    doc.text("© 2025 Hollywood Spectacles Optical. All rights reserved.", 105, pageHeight - 5, { align: "center" });
+
+	//Add a border line
+	doc.setDrawColor(231, 76, 60);
+	doc.line(15, pageHeight - 15, 195, pageHeight - 15);
+
+
+	    doc.save("Products_List.pdf");
 	};
+
+    // Toggle Low Stock filter
+const toggleLowStock = () => {
+  if (!lowStockOnly.value) {
+    lowStockOnly.value = true;
+    overstockOnly.value = false; // Uncheck Overstock
+  } else {
+    lowStockOnly.value = false; // Uncheck Low Stock
+  }
+};
+
+// Toggle Overstock filter
+const toggleOverstock = () => {
+  if (!overstockOnly.value) {
+    overstockOnly.value = true;
+    lowStockOnly.value = false; // Uncheck Low Stock
+  } else {
+    overstockOnly.value = false; // Uncheck Overstock
+  }
+};
 </script>
 
 <style scoped>
@@ -574,5 +781,47 @@
 
 .alert-fade-enter, .alert-fade-leave-to /* .alert-fade-leave-active in <2.1.8 */ {
   opacity: 0;
+}
+
+.header {
+    text-align: center;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-bottom: 3px solid #e74c3c;
+}
+
+.header h1 {
+    color: #e74c3c;
+    margin: 0;
+    font-size: 24px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.header p {
+    margin: 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn:hover {
+    background-color: #c0392b;
 }
 </style>

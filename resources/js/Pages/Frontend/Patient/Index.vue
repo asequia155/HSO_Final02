@@ -24,8 +24,8 @@
 							<!-- Home Icon and Link -->
 							<li>
 								<div class="flex items-center space-x-1">
-									<a href="/admin/dashboard" class="inline-flex items-center group text-red-600 hover:text-red-600 text-sm font-medium">
-										<svg class="w-5 h-5 text-gray-500 mr-1 group-hover:text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <a href="/dashboard" class="inline-flex items-center text-sm font-medium text-red-600 group hover:text-red-600">
+										<svg class="w-5 h-5 mr-1 text-gray-500 group-hover:text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 											<path
 												stroke-linecap="round"
 												stroke-linejoin="round"
@@ -37,6 +37,7 @@
 									<svg class="w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
 										<path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
 									</svg>
+
 									<a v-if="$page.props.auth.user.roles[0].name === 'admin'" href="/admin/dashboard" class="inline-flex items-center text-sm font-medium text-black group hover:text-red-600">
 										Admin Dashboard
 									</a>
@@ -50,7 +51,6 @@
 												d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
 											/>
 										</svg>
-										Clerk Dashboard
 									</a>
 
 									<svg class="w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -67,46 +67,84 @@
 					<h1 class="mt-2 text-xl font-semibold text-gray-900">Patient List</h1>
 				</div>
 				<div class="flex items-center space-x-3">
-					<div class="hidden sm:flex sm:items-center sm:ml-6">
-						<div class="relative ml-3">
-							<Dropdown align="right" width="48">
-								<template #trigger>
-									<span class="inline-flex rounded-md">
-										<button
-											type="button"
-											class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-black transition duration-150 ease-in-out bg-transparent border border-transparent rounded-md focus:outline-none"
-										>
-											<svg class="w-6 h-6 mr-1 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-												<path
-													stroke-linecap="round"
-													stroke-linejoin="round"
-													stroke-width="2"
-													d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-												/>
-											</svg>
-											{{ $page.props.auth.user.name }}
-											<svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-												<path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-											</svg>
-										</button>
-									</span>
-								</template>
+                <div class="relative mt-2">
+                    <!-- Notification Icon -->
+                    <button @click.prevent="toggleNotifDropdown">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M15 17h5l-1.405-1.405C18.317 14.74 18 13.38 18 12V9c0-3.866-3.134-7-7-7S4 5.134 4 9v3c0 1.38-.317 2.74-.595 3.595L2 17h5m8 0a3 3 0 01-6 0m6 0H9"
+                            />
+                        </svg>
+                        <span v-if="notifications.length > 0" class="absolute bottom-0 left-0 w-2 h-2 mb-6 ml-5 bg-red-500 rounded-full"></span>
+                    </button>
 
-								<template #content>
-									<DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
-									<DropdownLink :href="route('logout')" method="post" as="button">
-										Log Out
-									</DropdownLink>
-								</template>
-							</Dropdown>
-						</div>
-					</div>
-				</div>
+                    <!-- Notification Dropdown -->
+                    <div v-if="notifDropdownOpen" class="absolute right-0 z-10 overflow-hidden bg-white rounded-lg shadow-lg w-72">
+                        <ul>
+                            <!-- FIX: Correct key and property bindings -->
+                            <li v-for="notification in notifications" :key="notification.id" class="p-4 border-b">
+                                <div>
+                                    <h4 class="font-semibold">{{ notification.title }}</h4>
+                                    <p class="text-sm text-gray-600">{{ notification.message }}</p>
+                                </div>
+                            </li>
+                            <li>
+                                <Link :href="route('notifications.index')">
+
+                                <div v-if="notifications.length !== 0"  class="p-2 text-center text-gray-500">
+                                    Show all notifications
+                                </div>
+                            </Link>
+                            </li>
+                        </ul>
+                        <!-- FIX: Check notifications array directly -->
+                        <div v-if="notifications.length === 0" class="p-4 text-center text-gray-500">
+                            No new notifications
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden sm:flex sm:items-center sm:ml-6">
+                    <div class="relative ml-3">
+                        <Dropdown align="right" width="48">
+                            <template #trigger>
+                                <span class="inline-flex rounded-md">
+                                    <button
+                                        type="button"
+                                        class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-black transition duration-150 ease-in-out bg-transparent border border-transparent rounded-md focus:outline-none"
+                                    >
+                                        <svg class="w-6 h-6 mr-1 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                            />
+                                        </svg>
+                                        {{ $page.props.auth.user.name }}
+                                        <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                </span>
+                            </template>
+
+                            <template #content>
+                                <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
+                                <DropdownLink :href="route('logout')" method="post" as="button">
+                                    Log Out
+                                </DropdownLink>
+                            </template>
+                        </Dropdown>
+                    </div>
+                </div>
+            </div>
 			</div>
 		</div>
 
 		<!-- Alert Modal -->
-		<div v-if="flashMessage" class="fixed z-50 flex items-center max-w-lg overflow-hidden transform -translate-x-1/2 bg-white border border-green-600 rounded-lg shadow-lg top-5 left-1/2">
+		<div v-if="message" class="fixed z-50 flex items-center max-w-lg overflow-hidden transform -translate-x-1/2 bg-white border border-green-600 rounded-lg shadow-lg top-5 left-1/2">
 			<div class="flex items-center justify-center p-4 bg-green-600">
 				<svg class="w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -194,19 +232,17 @@
 						</div>
 					</div>
 				</div>
+
+
 				<!-- Buttons -->
 				<div class="flex items-center space-x-3">
 					<!-- Icon Buttons -->
-					<button @click="exportToExcel" class="flex items-center justify-center bg-yellow-100 rounded-full w-9 h-9 hover:bg-yellow-200" title="Export to excel">
+					<button @click="exportToPDF" class="flex items-center justify-center bg-yellow-100 rounded-full w-9 h-9 hover:bg-yellow-200" title="Export to PDF">
 						<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 9v10h12V9M6 5h12v4H6z" />
 						</svg>
 					</button>
-					<button class="flex items-center justify-center bg-purple-100 rounded-full w-9 h-9 hover:bg-purple-200" title="Export">
-						<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v8m4-4H8" />
-						</svg>
-					</button>
+
 					<!-- Add Category Button -->
 					<button @click="openAddModal" class="px-4 py-2 text-sm font-semibold text-white transition duration-300 bg-red-500 rounded-lg hover:bg-gray-600">
 						+ New Patient
@@ -222,28 +258,24 @@
 				<table v-else class="min-w-full text-sm font-light text-left text-gray-700">
 					<thead class="text-xs text-gray-700 uppercase bg-gray-200">
 						<tr>
-							<th scope="col" class="px-6 py-4">Id</th>
-							<th scope="col" class="px-6 py-4">First Name</th>
-							<th scope="col" class="px-6 py-4">Last Name</th>
+							<th scope="col" class="px-6 py-4">Name</th>
 							<th scope="col" class="px-6 py-4">Gender</th>
 							<th scope="col" class="px-6 py-4">Email</th>
 							<th scope="col" class="px-6 py-4">Contact</th>
 							<th scope="col" class="px-6 py-4">Occupation</th>
 							<th scope="col" class="px-6 py-4">Age</th>
-							<th scope="col" class="px-6 py-4">Actions</th>
+							<th  scope="col" class="px-6 py-4">Actions</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr v-for="item in paginatedPatients" :key="item.id" class="transition border-b cursor-pointer border-neutral-200 hover:bg-neutral-100">
-							<td class="px-6 py-3 whitespace-nowrap">{{ item.id }}</td>
-							<td class="px-6 py-3 whitespace-nowrap">{{ item.first_name }}</td>
-							<td class="px-6 py-3 whitespace-nowrap">{{ item.last_name }}</td>
-							<td class="px-6 py-3 whitespace-nowrap">{{ item.gender ? item.gender : 'not set' }}</td>
+                            <td class="px-6 py-3 whitespace-nowrap">{{ item.first_name + ' ' + item.last_name}}</td>
+							<td class="px-6 py-3 capitalize whitespace-nowrap">{{ item.gender ? item.gender : 'not set' }}</td>
 							<td class="px-6 py-3 whitespace-nowrap">{{ item.email }}</td>
 							<td class="px-6 py-3 whitespace-nowrap">+63 {{ item.phone }}</td>
-							<td class="px-6 py-3 whitespace-nowrap">{{ item.occupation }}</td>
+							<td class="px-6 py-3 capitalize whitespace-nowrap">{{ item.occupation }}</td>
 							<td class="px-6 py-3 whitespace-nowrap">{{ item.age }}</td>
-							<td class="px-6 py-3 whitespace-nowrap">
+                            <td  class="px-6 py-3 whitespace-nowrap">
 								<!-- Dropdown button for actions -->
 								<button
 									id="apple-ipad-air-dropdown-button"
@@ -260,23 +292,23 @@
 								<div v-if="dropdownOpen === item.id" class="absolute right-0 z-50 bg-white divide-y divide-gray-100 rounded shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
 									<ul class="py-1 text-sm" aria-labelledby="apple-ipad-air-dropdown-button">
 										<li>
-    <button
-        @click.stop="viewPatientDetails(item)"
-        class="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white dark:text-gray-200"
-    >
-        <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-            <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-            />
-        </svg>
-        Preview
-    </button>
-</li>
-										<li>
 											<button
+												@click.stop="viewPatientDetails(item)"
+												class="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white dark:text-gray-200"
+											>
+												<svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+													<path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+													<path
+														fill-rule="evenodd"
+														clip-rule="evenodd"
+														d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+													/>
+												</svg>
+												Update Info
+											</button>
+										</li>
+										<li>
+											<button v-if="$page.props.auth.user.roles[0].name === 'admin'"
 												@click.stop="openDeleteModal(item.first_name + ' ' + item.last_name, item.id)"
 												class="flex items-center w-full px-4 py-2 text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-red-400"
 											>
@@ -298,23 +330,36 @@
 					</tbody>
 				</table>
 			</div>
-			<!-- pagination -->
+			<!-- Pagination -->
 			<div class="relative z-10 flex flex-col items-center justify-between p-4 border-t md:flex-row border-neutral-200">
-				<span class="text-sm font-normal text-gray-500"> Showing <span class="font-semibold">{{ startItem }}</span> - <span class="font-semibold">{{ endItem }}</span> of <span class="font-semibold">{{ totalItems }}</span> </span>
-				<ul class="inline-flex items-stretch mt-2 -space-x-px md:mt-0">
-					<li>
-						<button @click="prevPage" :disabled="currentPage === 1" class="px-3 py-1.5 border rounded-l-lg">Prev</button>
-					</li>
-					<li v-for="page in totalPages" :key="page">
-						<button @click="changePage(page)" :class="['px-3 py-1.5 border', currentPage === page ? 'bg-gray-300' : 'bg-white']">{{ page }}</button>
-					</li>
-					<li>
-						<button @click="nextPage" :disabled="currentPage === totalPages" class="px-3 py-1.5 border rounded-r-lg">Next</button>
-					</li>
-				</ul>
+			<span class="text-sm font-normal text-gray-500">
+				Showing <span class="font-semibold">{{ startItem }}</span> - <span class="font-semibold">{{ endItem }}</span> of <span class="font-semibold">{{ totalItems }}</span>
+			</span>
+			<ul class="inline-flex items-stretch mt-2 -space-x-px md:mt-0">
+				<li>
+				<button @click="prevPage" :disabled="currentPage === 1" class="px-3 py-1.5 border rounded-l-lg">Prev</button>
+				</li>
+				<li v-if="currentPage > 3">
+				<button @click="changePage(1)" class="px-3 py-1.5 border bg-white">1</button>
+				<span class="px-2 py-1.5">...</span>
+				</li>
+				<li v-for="page in visiblePages" :key="page">
+				<button
+					@click="changePage(page)"
+					:class="['px-3 py-1.5 border', currentPage === page ? 'bg-gray-300' : 'bg-white']">
+					{{ page }}
+				</button>
+				</li>
+				<li v-if="currentPage < totalPages - 2">
+				<span class="px-2 py-1.5">...</span>
+				<button @click="changePage(totalPages)" class="px-3 py-1.5 border bg-white">{{ totalPages }}</button>
+				</li>
+				<li>
+				<button @click="nextPage" :disabled="currentPage === totalPages" class="px-3 py-1.5 border rounded-r-lg">Next</button>
+				</li>
+			</ul>
 			</div>
-		</div>
-
+        </div>
 		<!-- Modal Component -->
 		<ShowModal :isOpen="showModal" :patients="selectedPatients" @close="closeModal" />
 		<AddPatientModal :isOpen="addModal" :patients="patients" @close="closeAddModal" @add="addPatient" />
@@ -323,258 +368,334 @@
 </template>
 
 <script setup>
-		import { ref, watch, computed, defineProps } from 'vue';
-		import { router } from '@inertiajs/vue3';
-		import ShowModal from './Show.vue';
-		import EditModal from './EditPatientModal.vue';
-		import DashboardLayout from '@/Layouts/DashboardLayout.vue';
-		import AddPatientModal from './AddPatientModal.vue';
-		import DeletePatientModal from './DeletePatientModal.vue';
-		import { Inertia } from '@inertiajs/inertia';
-		import { onMounted, onBeforeUnmount } from 'vue';
-		import { route } from 'ziggy-js';
-		import Dropdown from '@/Components/Dropdown.vue';
-		import DropdownLink from '@/Components/DropdownLink.vue';
-		import { utils, writeFile } from 'xlsx';
+	import { ref, watch, computed, defineProps } from 'vue';
+	import { Link } from "@inertiajs/inertia-vue3";
+	import { router } from '@inertiajs/vue3';
+	import ShowModal from './Show.vue';
+	import EditModal from './EditPatientModal.vue';
+	import DashboardLayout from '@/Layouts/DashboardLayout.vue';
+	import AddPatientModal from './AddPatientModal.vue';
+	import DeletePatientModal from './DeletePatientModal.vue';
+	import { Inertia } from '@inertiajs/inertia';
+	import { onMounted, onBeforeUnmount } from 'vue';
+	import { route } from 'ziggy-js';
+	import Dropdown from '@/Components/Dropdown.vue';
+	import DropdownLink from '@/Components/DropdownLink.vue';
+	import { jsPDF } from "jspdf";
+	import autoTable from "jspdf-autotable";
 
 
-		const props = defineProps({
-		patients: Array,
-		default: () => ({}),
-		message: String,
-		message_type: String,
+	const props = defineProps({
+	patients: Array,
+	default: () => ({}),
+	message: String,
+	message_type: String,
+	notifications: {
+		type: Array,
+		default: () => [], // Default to an empty array
+		},
+	});
+
+	// State for dropdown visibility and notifications list
+	const notifDropdownOpen = ref(false);
+
+	// Toggle the dropdown visibility
+	const toggleNotifDropdown = () => {
+		notifDropdownOpen.value = !notifDropdownOpen.value;
+	};
+
+	const message = ref(props.message || '');
+	const messageType = ref(props.message_type || 'info');
+	console.log(props.message);   // Log message content
+	console.log(props.message_type); // Log message type
+
+	onMounted(() => {
+		setTimeout(() => {
+			message.value = ''; // Clear the message after 3 seconds
+			messageType.value = '';
+		}, 3000);
+	});
+
+	const addModal = ref(false);
+	const searchQuery = ref('');
+	const currentPage = ref(1);
+	const itemsPerPage = ref(5);
+	const showModal = ref(false);
+	const editModal = ref(false);
+	const selectedPatients = ref(null); // Initialized as null
+	const deleteModal = ref(false);
+	const patientNameToDelete = ref('');
+	const filterdropdownOpen = ref(false);
+
+	// State for selected genders
+	const selectedGenders = ref([]);
+
+	// Method to toggle the visibility of the gender filter dropdown
+	function toggleFilterDropdown() {
+	filterdropdownOpen.value = !filterdropdownOpen.value;
+	}
+
+
+	const viewPatientDetails = (item) => {
+		router.get(`/patients/${item.id}`, { patient: item }, {
+			preserveState: true, // Keeps the current state for smooth navigation
+			preserveScroll: true, // Keeps the scroll position
 		});
+	};
 
-		const message = ref(props.message || '');
-		const messageType = ref(props.message_type || 'info');
-		console.log(props.message);   // Log message content
-		console.log(props.message_type); // Log message type
+	const closeModal = () => {
+		editModal.value = false;
+		showModal.value = false;
+	};
 
-		onMounted(() => {
-	  		setTimeout(() => {
-	    		message.value = ''; // Clear the message after 3 seconds
-				messageType.value = '';
-	  		}, 3000);
-		});
+	// Computed property to filter patients based on search query
+	const filteredPatients = computed(() => {
+		let filteredData = props.patients;
 
-		const addModal = ref(false);
-		const searchQuery = ref('');
-		const currentPage = ref(1);
-		const itemsPerPage = ref(5);
-		const showModal = ref(false);
-		const editModal = ref(false);
-		const selectedPatients = ref(null); // Initialized as null
-		const deleteModal = ref(false);
-		const patientNameToDelete = ref('');
-		const filterdropdownOpen = ref(false);
-
-		// State for selected genders
-		const selectedGenders = ref([]);
-
-		// Method to toggle the visibility of the gender filter dropdown
-		function toggleFilterDropdown() {
-		  filterdropdownOpen.value = !filterdropdownOpen.value;
+		// Filter by search query
+		if (searchQuery.value) {
+			filteredData = filteredData.filter((patient) => {
+				return (
+					patient.first_name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+					patient.last_name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+					patient.email.toLowerCase().includes(searchQuery.value.toLowerCase())
+				);
+			});
 		}
 
+		// Filter by selected genders
+		if (selectedGenders.value.length > 0) {
+			filteredData = filteredData.filter((patient) => {
+				return selectedGenders.value.includes(patient.gender); // Match selected gender(s)
+			});
+		}
 
-		const viewPatientDetails = (item) => {
-  router.get(`/patients/${item.id}`, { patient: item }, {
-    preserveState: true, // Keeps the current state for smooth navigation
-    preserveScroll: true, // Keeps the scroll position
-  });
-};
-
-		const closeModal = () => {
-		  editModal.value = false;
-		  showModal.value = false;
-		};
-
-		// Computed property to filter patients based on search query
-		const filteredPatients = computed(() => {
-		  let filteredData = props.patients;
-
-		  // Filter by search query
-		  if (searchQuery.value) {
-		    filteredData = filteredData.filter((patient) => {
-		      return (
-		        patient.first_name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-		        patient.last_name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-		        patient.email.toLowerCase().includes(searchQuery.value.toLowerCase())
-		      );
-		    });
-		  }
-
-		  // Filter by selected genders
-		  if (selectedGenders.value.length > 0) {
-		    filteredData = filteredData.filter((patient) => {
-		      return selectedGenders.value.includes(patient.gender); // Match selected gender(s)
-		    });
-		  }
-
-		  return filteredData;
-		});
+		return filteredData;
+	});
 
 
-		//Delete Patient Function
-		const deletePatient = (patientId) => {
-		    Inertia.delete(route('patients.destroy', patientId));
-		};
-
-		const openDeleteModal = (patientName, patientId) => {
-		  closeDropdown(); // Close the dropdown whenever a modal is opened
-		  filterdropdownOpen.value = false;
-		  patientNameToDelete.value = patientName; // Store the patient's name
-		  selectedPatients.value = patientId; // Ensure selectedPatients is an object with an id
-		  deleteModal.value = true; // Open delete confirmation modal
-		};
-
-		const closeDeleteModal = () => {
-		  deleteModal.value = false; // Close delete confirmation modal
-		  patientNameToDelete.value = ''; // Clear patient name
-		};
-
-		const confirmDeletePatient = () => {
-		  deletePatient(selectedPatients.value); // Use the correct ID for deletion
-		  closeDeleteModal(); // Close the modal after deletion
-		};
-
-		// Computed property for total items
-		const totalItems = computed(() => filteredPatients.value.length);
-		const totalPages = computed(() => Math.ceil(totalItems.value / itemsPerPage.value));
-		const startItem = computed(() => (currentPage.value - 1) * itemsPerPage.value + 1);
-		const endItem = computed(() => Math.min(startItem.value + itemsPerPage.value - 1, totalItems.value));
-
-		// Computed property for pagination
-		const paginatedPatients = computed(() => {
-		  const start = (currentPage.value - 1) * itemsPerPage.value;
-		  return filteredPatients.value.slice(start, start + itemsPerPage.value).map((patient) => ({
-		    ...patient,
-		    age: calculateAge(patient.date_of_birth), // Add the age property
-		  }));
-		});
-
-		// Pagination navigation functions
-		const nextPage = () => {
-		  if (currentPage.value < totalPages.value) currentPage.value++;
-		};
-
-		const prevPage = () => {
-		  if (currentPage.value > 1) currentPage.value--;
-		};
-
-		const changePage = (page) => {
-		  currentPage.value = page;
-		};
-
-		// Modal functions
-		const openAddModal = () => {
-		  closeDropdown(); // Close the dropdown whenever a modal is opened
-		  filterdropdownOpen.value = false;
-		  selectedPatients.value = null; // Reset to ensure no patient is selected
-		  addModal.value = true;
-		};
-
-		const closeAddModal = () => {
-		  addModal.value = false;
-		};
-
-		const addPatient = (patient) => {
-		  Inertia.post(
-		    route('patients.store'),
-		    {
-		      first_name: patient.first_name,
-		      last_name: patient.last_name,
-		      gender: patient.gender,
-		      email: patient.email,
-		      phone: patient.phone,
-		      date_of_birth: patient.date_of_birth,
-		      address: patient.address,
-		      occupation: patient.occupation,
-		      rx: patient.rx,
-		      od: patient.od,
-		      os: patient.os,
-		      add: patient.add,
-		      pd: patient.pd,
-		    },
-		    {
-		      onSuccess: () => {
-		        closeAddModal(); // Close the modal after a successful addition
-		      },
-		      onError: (errors) => {
-		        console.error('Error adding patient:', errors);
-		      },
-		    }
-		  );
-		};
-
-		// Dropdown functions
-		const dropdownOpen = ref(null); // Store the id of the opened dropdown
-
-		const toggleDropdown = (id) => {
-		  dropdownOpen.value = dropdownOpen.value === id ? null : id; // Toggle dropdown based on id
-		};
-
-		const closeDropdown = () => {
-		  dropdownOpen.value = null;
-		};
-
-		// Attach event listener to handle clicks outside of dropdown
-		onMounted(() => {
-		  window.addEventListener('click', (event) => {
-		    const target = event.target;
-		    const isDropdownButton = target.closest('#apple-ipad-air-dropdown-button'); // Check if clicked inside the button
-		    const isDropdownMenu = target.closest('.absolute'); // Check if clicked inside the dropdown
-		    if (!isDropdownButton && !isDropdownMenu) {
-		      closeDropdown(); // Close if clicked outside
-		    }
-		  });
-		});
-
-		onBeforeUnmount(() => {
-		  window.removeEventListener('click', closeDropdown);
-		});
-
-		// Age calculation
-		const calculateAge = (dateOfBirth) => {
-		  if (!dateOfBirth) return null; // If date_of_birth is not provided
-		  const birthDate = new Date(dateOfBirth);
-		  const ageDiff = Date.now() - birthDate.getTime();
-		  const ageDate = new Date(ageDiff);
-		  return Math.abs(ageDate.getUTCFullYear() - 1970); // Calculate age
-		};
-
-		const exportToExcel = () => {
-	    const worksheetData = props.patients.map((patient) => ({
-	        Id: patient.id,
-	        'First Name': patient.first_name,
-	        'Last Name': patient.last_name,
-	        Gender: patient.gender ? patient.gender : 'not set',
-	        Email: patient.email,
-	        Contact: patient.phone,
-	        Occupation: patient.occupation,
-	        Age: calculateAge(patient.date_of_birth),
-			RX: patient.rx ? patient.rx : 'not recorded',
-	        OD: patient.od ? patient.od : 'not recorded',
-	        OS: patient.os ? patient.os : 'not recorded',
-	        ADD: patient.add ? patient.add : 'not recorded',
-	        PD: patient.pd ? patient.pd : 'not recorded',
-	    }));
-
-	    const worksheet = utils.json_to_sheet(worksheetData);
-	    const workbook = utils.book_new();
-	    utils.book_append_sheet(workbook, worksheet, 'Patients');
-
-	    // Generate and download the Excel file
-	    writeFile(workbook, 'Patient_List.xlsx');
+	//Delete Patient Function
+	const deletePatient = (patientId) => {
+		Inertia.delete(route('patients.destroy', patientId));
 	};
-</script>
-<style scoped>
+
+	const openDeleteModal = (patientName, patientId) => {
+		closeDropdown(); // Close the dropdown whenever a modal is opened
+		filterdropdownOpen.value = false;
+		patientNameToDelete.value = patientName; // Store the patient's name
+		selectedPatients.value = patientId; // Ensure selectedPatients is an object with an id
+		deleteModal.value = true; // Open delete confirmation modal
+	};
+
+	const closeDeleteModal = () => {
+		deleteModal.value = false; // Close delete confirmation modal
+		patientNameToDelete.value = ''; // Clear patient name
+	};
+
+	const confirmDeletePatient = () => {
+		deletePatient(selectedPatients.value); // Use the correct ID for deletion
+		closeDeleteModal(); // Close the modal after deletion
+	};
+
+	// Computed property for total items
+	// Pagination Computed Properties
+	const totalItems = computed(() => filteredPatients.value.length);
+	const startItem = computed(() => (currentPage.value - 1) * itemsPerPage.value + 1);
+	const endItem = computed(() => Math.min(startItem.value + itemsPerPage.value - 1, totalItems.value));
+	const totalPages = computed(() => Math.ceil(totalItems.value / itemsPerPage.value));
+
+	// Paginated Data
+	const paginatedPatients = computed(() => {
+		const start = (currentPage.value - 1) * itemsPerPage.value;
+		return filteredPatients.value.slice(start, start + itemsPerPage.value).map((patient) => ({
+		...patient,
+		age: calculateAge(patient.date_of_birth), // Include age calculation
+		}));
+	});
+
+	// Dynamic Visible Page Numbers
+	const visiblePages = computed(() => {
+		const range = 5; // Number of visible pages
+		const pages = [];
+		let start = Math.max(1, currentPage.value - Math.floor(range / 2));
+		let end = Math.min(totalPages.value, start + range - 1);
+
+		if (end === totalPages.value) {
+			start = Math.max(1, end - range + 1);
+		}
+
+		for (let i = start; i <= end; i++) {
+			pages.push(i);
+		}
+
+		return pages;
+	});
+
+	// Pagination Methods
+	const prevPage = () => {
+		if (currentPage.value > 1) currentPage.value--;
+	};
+
+	const nextPage = () => {
+		if (currentPage.value < totalPages.value) currentPage.value++;
+	};
+
+	const changePage = (page) => {
+		currentPage.value = page;
+	};
+
+
+	// Modal functions
+	const openAddModal = () => {
+		closeDropdown(); // Close the dropdown whenever a modal is opened
+		filterdropdownOpen.value = false;
+		selectedPatients.value = null; // Reset to ensure no patient is selected
+		addModal.value = true;
+	};
+
+	const closeAddModal = () => {
+		addModal.value = false;
+	};
+
+	const addPatient = (patient) => {
+		Inertia.post(
+			route('patients.store'),
+			{
+				first_name: patient.first_name,
+				last_name: patient.last_name,
+				gender: patient.gender,
+				email: patient.email,
+				phone: patient.phone,
+				date_of_birth: patient.date_of_birth,
+				address: patient.address,
+				occupation: patient.occupation,
+			},
+			{
+				onSuccess: () => {
+					closeAddModal(); // Close the modal after a successful addition
+				},
+				onError: (errors) => {
+					console.error('Error adding patient:', errors);
+				},
+			}
+		);
+	};
+
+	// Dropdown functions
+	const dropdownOpen = ref(null); // Store the id of the opened dropdown
+
+	const toggleDropdown = (id) => {
+		dropdownOpen.value = dropdownOpen.value === id ? null : id; // Toggle dropdown based on id
+	};
+
+	const closeDropdown = () => {
+		dropdownOpen.value = null;
+	};
+
+	// Attach event listener to handle clicks outside of dropdown
+	onMounted(() => {
+		window.addEventListener('click', (event) => {
+			const target = event.target;
+			const isDropdownButton = target.closest('#apple-ipad-air-dropdown-button'); // Check if clicked inside the button
+			const isDropdownMenu = target.closest('.absolute'); // Check if clicked inside the dropdown
+			if (!isDropdownButton && !isDropdownMenu) {
+				closeDropdown(); // Close if clicked outside
+			}
+		});
+	});
+
+	onBeforeUnmount(() => {
+		window.removeEventListener('click', closeDropdown);
+	});
+
+	// Age calculation
+	const calculateAge = (dateOfBirth) => {
+		if (!dateOfBirth) return null; // If date_of_birth is not provided
+		const birthDate = new Date(dateOfBirth);
+		const ageDiff = Date.now() - birthDate.getTime();
+		const ageDate = new Date(ageDiff);
+		return Math.abs(ageDate.getUTCFullYear() - 1970); // Calculate age
+	};
+
+	const exportToPDF = async () => {
+	const doc = new jsPDF();
+
+	//Add logo
+	const logo = new Image();
+	logo.src = '/images/logo.png';
+	doc.addImage(logo, 'PNG', 30, 3, 25, 20);
+
+	doc.setFontSize(18);
+	doc.setFont('Helvetica', 'bold');
+	doc.setTextColor('#e74c3c');
+	doc.text("Hollywood Spectacles Optical", 105, 10, { align: "center" });
+
+	doc.setFontSize(12);
+	doc.setFont('Roboto', 'normal');
+	doc.setTextColor('#000');
+	doc.text("Aguinaldo Street, Iligan City", 105, 15, { align: "center" });
+	doc.text("Contact No: 091277747297", 105, 20, { align: "center" });
+
+	doc.setDrawColor(231, 76, 60);
+	doc.line(10, 25, 200, 25);
+
+	doc.setFontSize(16);
+	doc.setFont('Roboto', 'bold');
+	doc.setTextColor('black');
+	doc.text("Patient List", 105, 35, { align: "center" });
+
+	const tableData = filteredPatients.value.map((patient) => [
+		patient.first_name,
+		patient.last_name,
+		patient.gender || 'not set',
+		patient.email,
+		patient.phone,
+		patient.occupation,
+		calculateAge(patient.date_of_birth) || 'N/A',
+	]);
+
+	autoTable(doc, {
+		startY: 40,
+		head: [["First Name", "Last Name", "Gender", "Email", "Contact", "Occupation", "Age"]],
+		body: tableData,
+		styles: {
+			halign: "center",
+			valign: "middle",
+			fontSize: 10,
+		},
+		headStyles: {
+			fillColor: [231, 76, 60],
+			textColor: [255, 255, 255],
+			fontStyle: "bold",
+		},
+		alternateRowStyles: {
+		fillColor: [245, 245, 245],
+		},
+	});
+
+// Add Footer
+const pageHeight = doc.internal.pageSize.height;
+    doc.setFontSize(10);
+    doc.setFont('Helvetica', 'normal');
+    doc.setTextColor('#000');
+    doc.text("Generated by Hollywood Spectacles Optical", 105, pageHeight - 10, { align: "center" });
+    doc.text("© 2025 Hollywood Spectacles Optical. All rights reserved.", 105, pageHeight - 5, { align: "center" });
+
+	//Add a border line
+	doc.setDrawColor(231, 76, 60);
+	doc.line(15, pageHeight - 15, 195, pageHeight - 15);
+
+	doc.save("Patient_List.pdf");
+	};
+
+	</script>
+	<style scoped>
 	/* Fade transition for the alert */
 	.alert-fade-enter-active, .alert-fade-leave-active {
-	  transition: opacity 0.5s ease;
+	transition: opacity 0.5s ease;
 	}
 
 	.alert-fade-enter, .alert-fade-leave-to /* .alert-fade-leave-active in <2.1.8 */ {
-	  opacity: 0;
+	opacity: 0;
 	}
-</style>
+	</style>

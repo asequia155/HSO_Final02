@@ -1,8 +1,10 @@
 <?php
 namespace App\Http\Controllers;
+use App\Models\Notification;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
+use App\Models\Batch;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Category;
@@ -17,14 +19,13 @@ class POSController extends Controller
     $products = Product::all();
     $categories = Category::all();
 
-    // Retrieve the transaction from flash data
-    $transaction = session('transaction');
-
     return Inertia::render('Frontend/POS/Index', [
         'products' => $products,
         'categories' => $categories,
         'message' => session('message'),
         'message_type' => session('message_type'),
+        'notifications' => Notification::where('is_read', false)->latest()->take(3)->get(),
+
     ]);
 }
 
@@ -49,79 +50,110 @@ class POSController extends Controller
             'product' => $product,
         ]);
     }
-    public function store(Request $request)
-    {
-        // Validate the incoming data
-        $validated = $request->validate([
-            'customer_name' => 'required|string|max:255',
-            'total' => 'required|numeric',
-            'tax' => 'required|numeric',
-            'discount_amount' => 'nullable|numeric',
-            'cart_items' => 'required|array',
-            'cart_items.*.product_name' => 'required|string',
-            'cart_items.*.quantity' => 'required|integer|min:1',
-        ]);
-    
-        $discountAmount = $validated['discount_amount'] ?? 0;
-    
-        // Begin a transaction
-        DB::beginTransaction();
-    
-        try {
-            $updatedCartItems = [];
-    
-            // Deduct product quantities from inventory and add price to cart items
-            foreach ($validated['cart_items'] as $item) {
-                // Find the product by name or another unique identifier
-                $product = Product::where('name', $item['product_name'])->first();
-    
-                if ($product) {
-                    $product->quantity -= $item['quantity'];
-    
-                    // Prevent negative inventory
-                    if ($product->quantity < 0) {
-                        throw new \Exception("Insufficient stock for {$product->name}.");
-                    }
-    
-                    $product->save();
-    
-                    // Add price to the cart item
-                    $updatedCartItems[] = [
-                        'product_name' => $item['product_name'],
-                        'quantity' => $item['quantity'],
-                        'price' => $product->price, // Add the price from the Product model
-                    ];
+
+//store
+public function store(Request $request)
+{
+
+    logger($request->all()); // Log the incoming request
+    // Validate the incoming data
+    $validated = $request->validate([
+        'customer_name' => 'required|string|max:255',
+        'patient_id' => 'nullable|exists:patients,id', // Add patient ID validation
+        'total_amount' => 'required|numeric',
+        'discount_amount' => 'nullable|numeric',
+        'tax_amount' => 'required|numeric',
+        'transaction_items' => 'required|array',
+        'transaction_items.*.product_id' => 'required|exists:products,id',
+        'transaction_items.*.quantity' => 'required|integer|min:1',
+        'transaction_items.*.price' => 'required|numeric',
+        'transaction_items.*.subtotal' => 'required|numeric',
+    ]);
+
+    // Begin a transaction
+    DB::beginTransaction();
+
+    try {
+        foreach ($validated['transaction_items'] as $item) {
+            $product = Product::findOrFail($item['product_id']);
+
+            // Check if the product has available stock
+            if ($product->quantity == 0) {
+                throw new \Exception("The product {$product->name} is out of stock.");
+            }
+
+            $remainingQuantity = $item['quantity'];
+
+            // Deduct the quantity from batches
+            $batches = Batch::where('product_id', $product->id)
+                ->where('quantity', '>', 0)
+                ->orderBy('production_date') // Adjust to 'expiry_date' if required
+                ->get();
+
+            foreach ($batches as $batch) {
+                if ($remainingQuantity <= 0) break;
+
+                if ($batch->quantity >= $remainingQuantity) {
+                    $batch->quantity -= $remainingQuantity;
+                    $batch->save();
+                    $remainingQuantity = 0;
+                } else {
+                    $remainingQuantity -= $batch->quantity;
+                    $batch->quantity = 0;
+                    $batch->save();
                 }
             }
-    
-            // Create the transaction record
-            Transaction::create([
-                'customer_name' => $validated['customer_name'],
-                'total' => $validated['total'],
-                'tax' => $validated['tax'],
-                'discount_amount' => $discountAmount,
-                'cart_items' => json_encode($updatedCartItems), // Save updated cart items with prices
-            ]);
-    
-            // Commit the transaction
-            DB::commit();
-    
-            return redirect()->route('pos.index')
-                ->with('message', 'Payment processed successfully!')
-                ->with('message_type', 'success');
-        } catch (\Exception $e) {
-            // Rollback in case of error
-            DB::rollBack();
-    
-            return redirect()->route('pos.index')
-                ->with('message', $e->getMessage())
-                ->with('message_type', 'error');
-        }
-    }
-    
-    
 
-    public function getBestSellingProducts()
+            // If stock is insufficient across all batches
+            if ($remainingQuantity > 0) {
+                throw new \Exception("Insufficient stock for {$product->name}.");
+            }
+
+            // Update product's total quantity
+            $product->quantity = Batch::where('product_id', $product->id)->sum('quantity');
+            $product->save();
+        }
+
+        // Create the transaction record
+        $transaction = Transaction::create([
+            'user_id' => auth()->id(), // Store the authenticated user's ID
+            'customer_name' => $validated['customer_name'],
+            'patient_id' => $validated['patient_id'] ?? null, // Link the transaction to the patient if provided
+            'total_amount' => $validated['total_amount'],
+            'discount_amount' => $validated['discount_amount'] ?? 0,
+            'tax_amount' => $validated['tax_amount'],
+        ]);
+
+        // Create transaction items
+        foreach ($validated['transaction_items'] as $item) {
+            $transaction->items()->create([
+                'product_id' => $item['product_id'],
+                'quantity' => $item['quantity'],
+                'price' => $item['price'],
+                'subtotal' => $item['subtotal'],
+            ]);
+        }
+
+        // Commit the transaction
+        DB::commit();
+
+        return redirect()->route('pos.index')
+            ->with('message', 'Payment processed successfully!')
+            ->with('message_type', 'success');
+    } catch (\Exception $e) {
+        // Rollback in case of error
+        DB::rollBack();
+
+        return redirect()->route('pos.index')
+            ->with('message', $e->getMessage())
+            ->with('message_type', 'error');
+    }
+}
+
+
+
+
+public function getBestSellingProducts()
 {
     // Get all transactions
     $transactions = Transaction::all();
@@ -181,6 +213,6 @@ public function getMonthlySalesSummary()
     ]);
 }
 
-    
+
 
 }

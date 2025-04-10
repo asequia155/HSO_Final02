@@ -1,6 +1,5 @@
 <?php
 
-// app/Models/Transaction.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,20 +9,39 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    // Define fillable fields to allow mass assignment
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
+        'user_id',
         'customer_name',
-        'total',
+        'total_amount',
         'discount_amount',
-        'tax',
-        'cart_items'
+        'payment_method',
+        'patient_id',
+        'tax_amount', // Added tax field
     ];
 
-    // Define `cart_items` as an array for easy JSON handling
-    protected $casts = [
-        'cart_items' => 'array', // Automatically cast JSON data to an array
-        'total' => 'float',      // Ensure total is handled as a float
-        'tax' => 'decimal:2',
-        'discount_amount' => 'float'
-    ];
+    /**
+     * Get the user who processed the transaction.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    /**
+     * Get the items associated with the transaction.
+     */
+    public function items()
+    {
+        return $this->hasMany(TransactionItem::class);
+    }
 }

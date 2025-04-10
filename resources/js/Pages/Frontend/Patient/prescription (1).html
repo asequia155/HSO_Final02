@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hollywood Spectacles Optical Prescription</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+  <script>
+
+    function generatePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  // Outer Border Line
+  doc.setDrawColor('#d32f2f');
+  doc.setLineWidth(1);
+  doc.rect(10, 10, 190, 270); // Outer border
+
+  // Header
+  doc.setFontSize(26);
+  doc.setFont('Helvetica', 'bold');
+  doc.setTextColor('#d32f2f');
+  doc.text('Hollywood Spectacles Optical', 105, 20, { align: 'center' });
+
+
+  doc.setFontSize(14);
+  doc.setFont('Helvetica', 'normal');
+  doc.text('Iligan City', 105, 30, { align: 'center' });
+
+  // Horizontal Line Before RX
+  doc.setDrawColor('black');
+  doc.setLineWidth(0.5);
+  doc.line(20, 35, 190, 35);
+
+  // RX Section
+  
+
+
+  
+
+  doc.setFontSize(18);
+  doc.setTextColor('#d32f2f');
+  doc.setFont('Helvetica', 'bold');
+  doc.text('RX:', 20, 45);
+
+  // Patient Info
+  const patientName = document.getElementById('patient-name').value || '______________________';
+  const date = document.getElementById('date').value || '______________________';
+
+  doc.setFontSize(12);
+  doc.setFont('Helvetica', 'normal');
+  doc.setTextColor('#000000');
+  doc.text(`Patient Name: ${patientName}`, 20, 55);
+  doc.text(`Date: ${date}`, 20, 63);
+
+  // Table Header
+  const tableX = 20;
+  const tableY = 73;
+  const colWidths = [40, 40, 40, 40];
+  const colLabels = ['OD', 'OS', 'ADD', 'PD'];
+  const rowHeight = 12;
+
+  doc.setDrawColor('#d32f2f');
+  doc.setFillColor('#fff');
+  doc.setFontSize(12);
+  doc.setTextColor('#d32f2f');
+
+  colLabels.forEach((label, index) => {
+    const x = tableX + index * colWidths[index];
+    doc.rect(x, tableY, colWidths[index], rowHeight, 'FD');
+    doc.text(label, x + colWidths[index] / 2, tableY + 8, { align: 'center' });
+  });
+
+  // Table Data
+  const od = document.querySelector('input[placeholder="e.g., -3.00"]').value || '-';
+  const os = document.querySelector('input[placeholder="e.g., -3.25"]').value || '-';
+  const add = document.querySelector('input[placeholder="e.g., +1.25"]').value || '-';
+  const pd = document.querySelector('input[placeholder="e.g., 62"]').value || '-';
+  const dataValues = [od, os, add, pd];
+
+  doc.setFont('Helvetica', 'normal');
+  doc.setTextColor('#000000');
+  dataValues.forEach((value, index) => {
+    const x = tableX + index * colWidths[index];
+    doc.text(value, x + colWidths[index] / 2, tableY + rowHeight + 8, { align: 'center' });
+  });
+
+  // Additional Info
+  const lensType = document.getElementById('lens-type').value || '______________________';
+  const frame = document.getElementById('frame').value || '______________________';
+  const remarks = document.getElementById('remarks').value || '______________________';
+
+  doc.text(`Type of Lens: ${lensType}`, 20, tableY + rowHeight + 20);
+  doc.text(`Frame: ${frame}`, 20, tableY + rowHeight + 30);
+  doc.text(`Other Specifications: ${remarks}`, 20, tableY + rowHeight + 40);
+
+  // Footer
+  doc.setFontSize(14);
+  doc.setFont('Helvetica', 'italic');
+  doc.text('Prescribed by: Optometrist', 105, tableY + rowHeight + 60, { align: 'center' });
+  doc.text('License No.: 0011863', 105, tableY + rowHeight + 70, { align: 'center' });
+
+  doc.save('prescription.pdf');
+}
+
+
+
+
+
+  </script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      text-align: center;
+    }
+    button {
+      background-color: #d32f2f;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #b71c1c;
+    }
+    .form-container {
+      margin-top: 20px;
+      background: white;
+      padding: 20px;
+      border: 2px solid #d32f2f;
+      border-radius: 10px;
+      text-align: left;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      text-align: center;
+      color: #d32f2f;
+    }
+    .header h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .header p {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+    .rx {
+      text-align: left;
+      font-size: 18px;
+      font-weight: bold;
+      margin: 15px 0;
+      color: #d32f2f;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    .submit-btn {
+      background-color: #d32f2f;
+      color: white;
+      margin-top: 20px;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    .submit-btn:hover {
+      background-color: #b71c1c;
+    }
+    table {
+      width: 100%;
+      margin-top: 10px;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #d32f2f;
+      padding: 8px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="prescription-form" class="form-container">
+      <div class="header">
+        <h2>Hollywood Spectacles Optical</h2>
+        <p>Iligan City</p>
+      </div>
+      <hr>
+
+      <div class="rx">RX:</div>
+
+      <form>
+        <label for="patient-name">Patient Name</label>
+        <input type="text" id="patient-name" placeholder="Enter Patient Name">
+
+        <label for="date">Date</label>
+        <input type="date" id="date">
+
+        <table>
+          <thead>
+            <tr>
+              <th>OD</th>
+              <th>OS</th>
+              <th>ADD</th>
+              <th>PD</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="text" placeholder="e.g., -3.00"></td>
+              <td><input type="text" placeholder="e.g., -3.25"></td>
+              <td><input type="text" placeholder="e.g., +1.25"></td>
+              <td><input type="text" placeholder="e.g., 62"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <label for="lens-type">Type of Lens</label>
+        <input type="text" id="lens-type" placeholder="e.g., Hoya PAL Multi-coated">
+
+        <label for="frame">Frame</label>
+        <input type="text" id="frame" placeholder="Enter Frame Details">
+
+        <label for="remarks">Other Specifications</label>
+        <input type="text" id="remarks" placeholder="Enter any additional specifications">
+
+        <div style="margin-top: 20px; text-align: center;">
+          <p>Prescribed by: <b>Optometrist</b></p>
+          <p>License No.: <b>0011863</b></p>
+        </div>
+
+        <button type="button" class="submit-btn" onclick="generatePDF()">Generate PDF</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

@@ -10,11 +10,11 @@ class CreatePatientPrescriptionsTable extends Migration
         Schema::create('patient_prescriptions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('patient_id');
-            $table->string('rx')->nullable();
             $table->string('od')->nullable();
             $table->string('os')->nullable();
             $table->string('add')->nullable();
             $table->string('pd')->nullable();
+            $table->string('remarks')->nullable();
             $table->timestamps();
 
             // Foreign key constraint

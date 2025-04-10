@@ -882,3 +882,7 @@ footer p {
     font-weight: 400;
     margin-bottom: 0;
 }
+
+.alert-banner {
+    z-index: 50;
+}

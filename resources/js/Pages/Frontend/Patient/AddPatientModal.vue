@@ -25,7 +25,7 @@
               v-model="first_name"
               id="first_name"
               type="text"
-              class="border w-full p-2 rounded"
+              class="border w-full p-2 rounded capitalize"
               placeholder="Enter first name"
             />
             <p v-if="errors.first_name" class="text-red-500 text-sm mt-1">{{ errors.first_name }}</p>
@@ -38,7 +38,7 @@
               v-model="last_name"
               id="last_name"
               type="text"
-              class="border w-full p-2 rounded"
+              class="border w-full p-2 rounded capitalize"
               placeholder="Enter last name"
             />
             <p v-if="errors.last_name" class="text-red-500 text-sm mt-1">{{ errors.last_name }}</p>
@@ -105,7 +105,7 @@
             <input
               v-model="address"
               id="address"
-              class="border w-full p-2 rounded"
+              class="border w-full p-2 rounded capitalize"
               placeholder="Enter address"
             />
             <p v-if="errors.address" class="text-red-500 text-sm mt-1">{{ errors.address }}</p>
@@ -117,49 +117,9 @@
             <input
               v-model="occupation"
               id="occupation"
-              class="border w-full p-2 rounded"
+              class="border w-full p-2 rounded capitalize"
               placeholder="Enter occupation"
             />
-            <p v-if="errors.occupation" class="text-red-500 text-sm mt-1">{{ errors.occupation }}</p>
-          </div>
-        </div>
-
-        <hr class="my-6 border-gray-300" />
-        <h3 class="text-lg font-semibold mb-4">Eye Prescription Details</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <!-- RX -->
-          <div>
-            <label for="rx" class="block mb-2 text-sm font-medium text-gray-900">RX (Prescription)</label>
-            <input v-model="rx" id="rx" type="text" class="border w-full p-2 rounded" placeholder="Enter prescription" />
-            <p v-if="errors.rx" class="text-red-500 text-sm mt-1">{{ errors.rx }}</p>
-          </div>
-          
-          <!-- OD -->
-          <div>
-            <label for="od" class="block mb-2 text-sm font-medium text-gray-900">OD (Right Eye)</label>
-            <input v-model="od" id="od" type="text" class="border w-full p-2 rounded" placeholder="Enter right eye value" />
-            <p v-if="errors.od" class="text-red-500 text-sm mt-1">{{ errors.od }}</p>
-          </div>
-          
-          <!-- OS -->
-          <div>
-            <label for="os" class="block mb-2 text-sm font-medium text-gray-900">OS (Left Eye)</label>
-            <input v-model="os" id="os" type="text" class="border w-full p-2 rounded" placeholder="Enter left eye value" />
-            <p v-if="errors.os" class="text-red-500 text-sm mt-1">{{ errors.os }}</p>
-          </div>
-          
-          <!-- Add -->
-          <div>
-            <label for="add" class="block mb-2 text-sm font-medium text-gray-900">Add (Addition)</label>
-            <input v-model="add" id="add" type="text" class="border w-full p-2 rounded" placeholder="Enter addition value" />
-            <p v-if="errors.add" class="text-red-500 text-sm mt-1">{{ errors.add }}</p>
-          </div>
-          
-          <!-- PD -->
-          <div>
-            <label for="pd" class="block mb-2 text-sm font-medium text-gray-900">PD (Pupillary Distance)</label>
-            <input v-model="pd" id="pd" type="text" class="border w-full p-2 rounded" placeholder="Enter pupillary distance" />
-            <p v-if="errors.pd" class="text-red-500 text-sm mt-1">{{ errors.pd }}</p>
           </div>
         </div>
 
@@ -198,12 +158,6 @@ const phone = ref('');
 const date_of_birth = ref('');
 const address = ref('');
 const occupation = ref('');
-const rx = ref('');
-const od = ref('');
-const os = ref('');
-const add = ref('');
-const pd = ref('');
-
 // Error messages
 const errors = ref({
   first_name: '',
@@ -213,12 +167,6 @@ const errors = ref({
   phone: '',
   date_of_birth: '',
   address: '',
-  occupation: '',
-  rx: '',
-  od: '',
-  os: '',
-  add: '',
-  pd: '',
 });
 
 // Validation function
@@ -255,33 +203,6 @@ const validate = () => {
     errors.value.address = 'Address is required.';
     isValid = false;
   }
-  if (!occupation.value) {
-    errors.value.occupation = 'Occupation is required.';
-    isValid = false;
-  }
-
-  // Eye Prescription Details validation
-  if (!rx.value) {
-    errors.value.rx = 'RX is required.';
-    isValid = false;
-  }
-  if (!od.value) {
-    errors.value.od = 'OD (Right Eye) is required.';
-    isValid = false;
-  }
-  if (!os.value) {
-    errors.value.os = 'OS (Left Eye) is required.';
-    isValid = false;
-  }
-  if (!add.value) {
-    errors.value.add = 'Addition value is required.';
-    isValid = false;
-  }
-  if (!pd.value) {
-    errors.value.pd = 'PD (Pupillary Distance) is required.';
-    isValid = false;
-  }
-
   return isValid;
 };
 
@@ -297,11 +218,6 @@ const submit = () => {
       date_of_birth: date_of_birth.value,
       address: address.value,
       occupation: occupation.value,
-      rx: rx.value,
-      od: od.value,
-      os: os.value,
-      add: add.value,
-      pd: pd.value,
     };
     emit('add', data);
     emit('close');

@@ -14,15 +14,20 @@ class Patient extends Model
         'last_name',
         'gender',
         'email',
-        'occupation',
         'phone',
         'date_of_birth',
         'address',
+        'occupation',
     ];
 
     public function prescriptions()
     {
         return $this->hasMany(PatientPrescription::class, 'patient_id');
     }
-    
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
 }

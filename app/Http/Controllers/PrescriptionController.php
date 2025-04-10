@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 
 use App\Models\PatientPrescription;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Inertia\Inertia;
-
+use Illuminate\Routing\Controller;
 
 class PrescriptionController extends Controller
 {
@@ -15,11 +14,11 @@ class PrescriptionController extends Controller
     public function store(Request $request, $id)
     {
         $validated = $request->validate([
-            'rx' => 'required|string|max:255',
-            'od' => 'nullable|string|max:255',
-            'os' => 'nullable|string|max:255',
-            'add' => 'nullable|string|max:255',
-            'pd' => 'nullable|string|max:255',
+            'od' => 'required|string|max:255',
+            'os' => 'required|string|max:255',
+            'add' => 'required|string|max:255',
+            'pd' => 'required|string|max:255',
+            'remarks' => 'nullable|string|max:255',
         ]);
     
         $validated['patient_id'] = $id;
@@ -31,9 +30,6 @@ class PrescriptionController extends Controller
         return redirect()->route('patients.show', ['id' => $id])
         ->with('message', 'Prescription added successfully.')
         ->with('message_type', 'success');
-    
-
-
     }
 
     public function destroy($patientId, $prescriptionId)
@@ -58,11 +54,11 @@ public function update(Request $request, $patientId, $prescriptionId)
         ->firstOrFail();
 
     $validated = $request->validate([
-        'rx' => 'required|string|max:255',
-        'od' => 'nullable|string|max:255',
-        'os' => 'nullable|string|max:255',
-        'add' => 'nullable|string|max:255',
-        'pd' => 'nullable|string|max:255',
+        'od' => 'required|string|max:255',
+        'os' => 'required|string|max:255',
+        'add' => 'required|string|max:255',
+        'pd' => 'required|string|max:255',
+        'remarks' => 'nullable|string|max:255',
     ]);
 
     $prescription->update($validated);

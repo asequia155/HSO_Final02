@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Reservation;
+use App\Models\ReservationHistory;
 use App\Models\Patient;
 use App\Models\Product;
 use App\Models\Notification;
@@ -32,8 +33,12 @@ class DashboardController extends Controller
                 'todayTotalSales' => Transaction::whereDate('created_at', Carbon::today())->sum('total'),
                 'notifications' =>Notification::all(),
             ]);
-        }
 
+    } elseif ($user->hasRole('patient')) {
+        return Inertia::render('PatientDashboard', [
+            'notifications' =>Notification::all(),
+        ]);
+    }
         // Full rawboard logic for other use cases
         // $patients = Patient::all();
         // $products = Product::all();
@@ -57,8 +62,10 @@ class DashboardController extends Controller
     public function adminDashboard()
     {
 
+        $currentDate = now()->toDateString(); // Get the current date
+
         // Fetch the transaction totals grouped by date
-        $salesChart = Transaction::selectRaw('DATE(created_at) as date, SUM(total) as total')
+        $salesChart = Transaction::selectRaw('DATE(created_at) as date, SUM(total_amount) as total')
         ->groupBy('date')
         ->get()
         ->map(function ($item) {
@@ -75,21 +82,50 @@ class DashboardController extends Controller
         return Inertia::render('AdminDashboard', [
             'totalPatients' => Patient::count(),
             'totalProducts' => Product::count(),
-            'totalSales' => Transaction::sum('total'),
-            'todayTotalSales' => Transaction::whereDate('created_at', Carbon::today())->sum('total'),
+            'totalSales' => Transaction::sum('total_amount'),
+            'todayTotalSales' => Transaction::whereDate('created_at', Carbon::today())->sum('total_amount'),
             'salesChartData' => $salesChart->toArray(),
-            'notifications' => Notification::where('is_read', true)->latest()->take(3)->get(),
+            'notifications' => Notification::where('is_read', false)->latest()->take(3)->get(),
+            'TodaysReservationList' => Reservation::where('appointment_date', '>=', $currentDate)->get(),
+            'todayTotalAppointments' => Reservation::where('appointment_date', '>=', $currentDate)->count(),
+
 
         ])->with('debug', true);
     }
 
     public function clerkDashboard()
     {
+        $currentDate = now()->toDateString(); // Get the current date
+
+        // Fetch the transaction totals grouped by date
+        $salesChart = Transaction::selectRaw('DATE(created_at) as date, SUM(total_amount) as total')
+        ->groupBy('date')
+        ->get()
+        ->map(function ($item) {
+            return [
+                'label' => Carbon::parse($item->date)->format('F'), // Formatting the date to show month and year
+                'value' => $item->total,
+            ];
+        });
         return Inertia::render('ClerkDashboard', [
             'totalProducts' => Product::count(),
-            'todayTotalSales' => Transaction::whereDate('created_at', Carbon::today())->sum('total'),
-            'totalSales' => Transaction::sum('total'),
-            'notifications' => Notification::where('is_read', true)->latest()->take(3)->get(),
+            'todayTotalSales' => Transaction::whereDate('created_at', Carbon::today())->sum('total_amount'),
+            'totalSales' => Transaction::sum('total_amount'),
+            'salesChartData' => $salesChart->toArray(),
+
+            'notifications' => Notification::where('is_read', false)->latest()->take(3)->get(),
+            'TodaysReservationList' => Reservation::where('appointment_date', '>=', $currentDate)->get(),
+            'todayTotalAppointments' => Reservation::where('appointment_date', '>=', $currentDate)->count(),
+
+
+        ]);
+    }
+
+public function PatientDashboard()
+    {
+        return Inertia::render('PatientDashboard', [
+
+
         ]);
     }
 }
