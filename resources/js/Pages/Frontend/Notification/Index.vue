@@ -188,7 +188,7 @@
   import DashboardLayout from '@/Layouts/DashboardLayout.vue';
   import Dropdown from '@/Components/Dropdown.vue';
   import DropdownLink from '@/Components/DropdownLink.vue'
-import route from 'ziggy-js';
+import { route } from 'ziggy-js';
   import { ref, computed, defineProps } from 'vue';
   import { onMounted, onBeforeUnmount } from 'vue';
   import { Inertia } from '@inertiajs/inertia';
