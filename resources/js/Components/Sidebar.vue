@@ -344,7 +344,7 @@ v-if="$page.props.auth.user.roles[0].name === 'clerk' || $page.props.auth.user.r
   import { Link } from "@inertiajs/inertia-vue3";
   import { ref, onMounted, onBeforeUnmount, defineProps } from 'vue';
   import logored from "./logored.vue";
-  import { route } from 'ziggy-js';
+import route from 'ziggy-js';
   import axios from "axios";
 // Toggle dropdown
 

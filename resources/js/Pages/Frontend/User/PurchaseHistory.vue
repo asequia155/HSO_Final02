@@ -100,7 +100,7 @@ import { ref, defineProps, computed } from 'vue';
 import { onMounted, onBeforeUnmount, watch } from 'vue';
 
 import { Inertia } from '@inertiajs/inertia';
-import { route } from 'ziggy-js';
+import route from 'ziggy-js';
 
 import { jsPDF } from "jspdf";
 

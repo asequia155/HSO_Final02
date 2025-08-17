@@ -351,7 +351,7 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import EditBatch from './EditBatch.vue';
 import DeleteBatch from './DeleteBatch.vue';
 import { Inertia } from '@inertiajs/inertia';
-import { route } from 'ziggy-js';
+import route from 'ziggy-js';
 import autoTable from "jspdf-autotable";
 import { jsPDF } from "jspdf";
 

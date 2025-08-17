@@ -390,7 +390,7 @@ import { onMounted, onBeforeUnmount, watch } from 'vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import { Inertia } from '@inertiajs/inertia';
-import { route } from 'ziggy-js';
+import route from 'ziggy-js';
 
 
     const props = defineProps({
