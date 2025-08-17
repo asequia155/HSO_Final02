@@ -520,7 +520,7 @@ import DeleteReservationModal from './DeleteReservationModal.vue';
 import ConfirmReservationModal from './ConfirmReservationModal.vue';
 import { Inertia } from '@inertiajs/inertia';
 import { onMounted, onBeforeUnmount } from 'vue';
-import route from 'ziggy-js';
+import { route } from 'ziggy-js';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import axios from 'axios';

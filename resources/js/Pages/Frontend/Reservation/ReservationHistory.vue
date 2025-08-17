@@ -348,7 +348,7 @@
 import { ref, watch, computed, onMounted, onBeforeUnmount } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { Link} from "@inertiajs/inertia-vue3";
-import route from 'ziggy-js';
+import { route } from 'ziggy-js';
 import axios from 'axios';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';

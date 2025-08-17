@@ -441,7 +441,7 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import AddPatientRecord from './AddPatientRecord.vue';
 import { Inertia } from '@inertiajs/inertia';
-import route from 'ziggy-js';
+import { route } from 'ziggy-js';
 import EditPatientRecord from './EditPatientRecord.vue';
 import EditModal from './EditPatientModal.vue';
 import DeletePatientRecord from './DeletePatientRecord.vue';
